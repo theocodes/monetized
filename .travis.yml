@@ -2,10 +2,4 @@ language: elixir
 elixir:
   - 1.1.1
 otp_release:
-  - 18
-sudo: false # to use faster container based build environment
-script:
-  - mix test
-notifications:
-  recipients:
-    - theocodes@gmail.com
+  - 18.0
