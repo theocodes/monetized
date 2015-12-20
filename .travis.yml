@@ -3,3 +3,6 @@ elixir:
   - 1.1.1
 otp_release:
   - 18.0
+after_script:
+  - mix deps.get --only docs
+  - MIX_ENV=docs mix inch.report
