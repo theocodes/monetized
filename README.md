@@ -8,7 +8,7 @@ However, in order for it to be an actual viable option we must first lay some gr
 
 ## Usage
 
-```
+```elixir
 alias Monetized.Money
 alias Monetized.Math
 
@@ -44,7 +44,7 @@ are done on floats but rather on the basic fractional units (integers).
 ## Config
 
 
-```
+```elixir
 config :monetized, config: [
   delimiter: ",",
   separator: ".",
@@ -58,7 +58,7 @@ config :monetized, config: [
 
   Add monetized to your list of dependencies in `mix.exs`:
 
-```
+```elixir
 def deps do
   [{:monetized, "~> 0.1.0"}]
 end
