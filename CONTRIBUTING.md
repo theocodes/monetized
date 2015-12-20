@@ -1,0 +1,17 @@
+# Contribution Guidelines
+
+## Steps
+
+1. Fork [the repo](https://github.com/theocodes/monetized)
+2. Make sure everything is working: `mix test`
+3. Create your feature branch (`git checkout -b my-new-feature`)
+4. Make your changes
+5. Test your changes
+6. Commit your changes (`git commit -am 'Add some feature'`)
+7. Push to the branch (`git push origin my-new-feature`)
+8. Create a Pull Request
+
+## Notes
+
+When contributing, please make sure to update the [CHANGELOG.md](CHANGELOG.md) when you submit
+your pull request.
