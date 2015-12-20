@@ -31,7 +31,6 @@ result == %Monetized.Money{currency: "USD", units: 5000000}
 
 # Getting the string representation
 Money.to_string(result, [show_currency: true]) == "$ 50,000.00"
-
 ```
 
 Check the [docs](#) for more examples
@@ -66,7 +65,10 @@ end
 
 ```
 
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## Licensing
+
+See [LICENSE.md](LICENSE.md)
