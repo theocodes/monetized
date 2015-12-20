@@ -20,6 +20,7 @@ item_one == %Monetized.Money{currency: "GBP", units: 20050}
 
 # Or a float
 item_two = Money.make(10.25)
+item_two == %Monetized.Money{currency: "USD", units: 1025}
 
 # Adding two moneys together
 Math.add(item_one, item_two) == %Monetized.Money{currency: "USD", units: 21075}
