@@ -37,7 +37,9 @@ defmodule Monetized.Mixfile do
 
   defp description do
     """
+    
     A lightweight solution for handling and storing money.
+
     """
   end
 
