@@ -33,7 +33,7 @@ result == %Monetized.Money{currency: "USD", units: 5000000}
 Money.to_string(result, [show_currency: true]) == "$ 50,000.00"
 ```
 
-Check the [docs](#) for more examples
+Check the [docs](http://hexdocs.pm/monetized/0.1.0/) for more examples
 
 ##### Note
 
