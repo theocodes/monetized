@@ -26,7 +26,9 @@ defmodule Monetized.Mixfile do
   defp package do
     [
       maintainers: ["Thiago Felippe"],
-      licenses: ["MIT"]
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/theocodes/monetized",
+              "Docs" => "http://hexdocs.pm/monetized/0.1.0"}
     ]
   end
 
