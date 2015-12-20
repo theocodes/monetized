@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/theocodes/monetized.svg?branch=master)](https://travis-ci.org/theocodes/monetized)
+
 # Monetized
 
 As a general rule, using floats to store money is a [bad idea](http://spin.atomicobject.com/2014/08/14/currency-rounding-errors/).
