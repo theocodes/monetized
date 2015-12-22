@@ -29,6 +29,10 @@ defmodule Monetized.Math do
       iex> result = Monetized.Math.add(100.50, 200)
       ...> Monetized.Money.to_string(result, [show_currency: true])
       "$ 300.50"
+
+      iex> result = Monetized.Math.add("£100", "£1,350.25")
+      ...> Monetized.Money.to_string(result, [show_currency: true])
+      "£ 1,450.25"
       
   """
 
@@ -64,6 +68,10 @@ defmodule Monetized.Math do
       iex> result = Monetized.Math.sub(100.50, 200)
       ...> Monetized.Money.to_string(result, [show_currency: true])
       "$ -99.50"
+
+      iex> result = Monetized.Math.sub("£ -100", "£ 1,200.00")
+      ...> Monetized.Money.to_string(result, [show_currency: true])
+      "£ -1,300.00"
       
   """
 
@@ -73,7 +81,7 @@ defmodule Monetized.Math do
     a = to_money(a)
     b = to_money(b)
     
-    a.units - b.units 
+    a.units - b.units
     |> Money.make([currency: a.currency, units: true])
   end
   

@@ -1,7 +1,7 @@
 defmodule Monetized.Money do
 
   import Monetized.Money.Utils
-  import Monetized.Currency
+  alias Monetized.Currency
   
   @moduledoc """
   
@@ -34,11 +34,11 @@ defmodule Monetized.Money do
   
   @doc """
   
-  Returns a string representation of the given money
+  Returns a string representation of the given money.
   
   ## Examples
   
-      iex> money = Monetized.Money.make("20150.25", [currency: "GBP"])
+      iex> money = Monetized.Money.make("£ 20150.25")
       ...> Monetized.Money.to_string(money, [show_currency: true])
       "£ 20,150.25"
       
@@ -46,7 +46,7 @@ defmodule Monetized.Money do
       ...> Monetized.Money.to_string(money, [delimiter: " ", separator: " "])
       "999 999 999 00"
       
-      iex> money = Monetized.Money.make(100_000_000, [currency: "USD"])
+      iex> money = Monetized.Money.make(100_000_000)
       ...> Monetized.Money.to_string(money, [format: "%n%s%d %c", show_currency: true])
       "100,000,000.00 $"
       
@@ -70,7 +70,7 @@ defmodule Monetized.Money do
     |> String.Chars.to_string
     
     currency = if options[:show_currency] do 
-      get_currency(money.currency).symbol 
+      Currency.get(money.currency).symbol 
     else
       "" 
     end
@@ -91,17 +91,17 @@ defmodule Monetized.Money do
   It uses the default currency ("USD") if one isn't
   configured.
 
-  Passing `currency` in the options will make it use that
-  despite of configured or default.
+  If a string is given with either the currency key/code 
+  (ie "USD") or the symbol present, that currency will be
+  assumed.
 
-  This function exists for convenience and despite it taking
-  a float value, the internal calculations are done on 
-  integers (basic units)
+  Passing `currency` in the options will make it use that
+  despite of configured, default or assumed from string.
   
   ## Examples
 
-      iex> Monetized.Money.make("20150.25", [currency: "GBP"])
-      %Monetized.Money{currency: "GBP", units: 2015025}
+      iex> Monetized.Money.make("20150.25 EUR")
+      %Monetized.Money{currency: "EUR", units: 2015025}
       
       iex> Monetized.Money.make(20150.25, [currency: "EUR"])
       %Monetized.Money{currency: "EUR", units: 2015025}
@@ -144,28 +144,41 @@ defmodule Monetized.Money do
   
   ## Examples
 
-      iex> Monetized.Money.from_string("10.52", [currency: "GBP"])
+      iex> Monetized.Money.from_string("GBP 10.52")
       %Monetized.Money{currency: "GBP", units: 1052}
       
+      iex> Monetized.Money.from_string("€ 100")
+      %Monetized.Money{currency: "EUR", units: 10000}
+
       iex> Monetized.Money.from_string("100", [currency: "EUR"])
       %Monetized.Money{currency: "EUR", units: 10000}
       
+      iex> Monetized.Money.from_string("$50")
+      %Monetized.Money{currency: "USD", units: 5000}
+
   """
 
   @spec from_string(String.t, list) :: money
   
-  def from_string(amount, options) do
-    {base, remainder} = Integer.parse(amount)
-    from_string(base, remainder, options)
-  end
-  
-  defp from_string(amount, "", options) do
-    create(amount, options)
-  end
-  
-  defp from_string(base, remainder, options) do
-    decimal = String.strip(remainder, ?.) |> String.to_integer 
-    create(base, decimal, options)
+  def from_string(amount, options \\ []) when is_bitstring(amount) do
+    cond do
+      currency = Currency.parse(amount) ->
+        currency_key = currency.key
+        options = Dict.merge([currency: currency_key], options)
+      true ->
+        # NOOP!
+    end
+
+    if Regex.run(~r/\./, amount) != nil do
+      options = Dict.merge([units: true], options)
+    end
+
+    Regex.run(~r/-?[0-9]{1,300}(,[0-9]{3})*(\.[0-9]+)?/, amount) 
+    |> List.first 
+    |> String.replace(~r/\./, "") 
+    |> String.replace(~r/\,/, "")
+    |> String.to_integer
+    |> from_integer(options)
   end
   
   @doc """
@@ -190,7 +203,7 @@ defmodule Monetized.Money do
 
   @spec from_integer(integer, list) :: money
   
-  def from_integer(amount, options) do
+  def from_integer(amount, options \\ []) when is_integer(amount) do
     create(amount, options)
   end
   
@@ -208,7 +221,6 @@ defmodule Monetized.Money do
   a float value, the internal calculations are done on 
   integers (basic units)
 
-  
   ## Examples
 
       iex> Monetized.Money.from_float(100.00, [currency: "EUR"])
@@ -229,23 +241,9 @@ defmodule Monetized.Money do
     |> from_string(options)
   end
   
-  defp create(base, decimal, options) do
-    currency_key = option_or_config(config, options, :currency)
-    currency = get_currency(currency_key)
-
-    case is_negative?(base) do
-      true ->
-        amount = if options[:units], do: nf(base, decimal), else: nf(base, decimal, currency.to_unit)
-      false ->
-        amount = if options[:units], do: pf(base, decimal), else: pf(base, decimal, currency.to_unit)
-    end
-    
-    do_create(amount, currency_key)
-  end
-  
   defp create(amount, options) do
     currency_key = option_or_config(config, options, :currency)
-    currency = get_currency(currency_key)
+    currency = Currency.get(currency_key)
     
     unless options[:units] do
       amount = amount * currency.to_unit

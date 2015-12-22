@@ -15,15 +15,15 @@ alias Monetized.Money
 alias Monetized.Math
 
 # Create with a string
-item_one = Money.make("200.50", [currency: "GBP"])
+item_one = Money.make("£ 200.50")
 item_one == %Monetized.Money{currency: "GBP", units: 20050}
 
 # Or a float
-item_two = Money.make(10.25)
-item_two == %Monetized.Money{currency: "USD", units: 1025}
+item_two = Money.make(10.25, [currency: "GBP"])
+item_two == %Monetized.Money{currency: "GBP", units: 1025}
 
 # Adding two moneys together
-Math.add(item_one, item_two) == %Monetized.Money{currency: "USD", units: 21075}
+Math.add(item_one, item_two) == %Monetized.Money{currency: "GBP", units: 21075}
 
 # Or an integer
 balance = Money.make(100_000_00, [units: true])
@@ -34,13 +34,31 @@ result == %Monetized.Money{currency: "USD", units: 5000000}
 
 # Getting the string representation
 Money.to_string(result, [show_currency: true]) == "$ 50,000.00"
+
+# You can also use `from_integer/2`, `from_float/2` and `from_string/2`
+# respectively if the desired behavior is to raise when the amount is 
+# not of the expected type.
+
+# If either the symbol or the currency key is found within the string,
+# that currency will be used. However, if a different currency is given in the
+# options, it will take precedence.
+Money.from_string("£ 200") == %Monetized.Money{currency: "GBP", units: 20000}
+Money.from_string("200 EUR") == %Monetized.Money{currency: "EUR", units: 20000}
+
+# Passing `units: true` in the options will make it assume the amount is
+# already in the basic fractional unit format
+Money.from_integer(20050, [units: true]) == %Monetized.Money{currency: "USD", units: 20050}
+
+Money.from_float(200.50) == %Monetized.Money{currency: "USD", units: 20050}
+
+Money.from_integer("10") # This will raise FunctionClauseError
 ```
 
 Check the [docs](http://hexdocs.pm/monetized/0.1.0/) for more examples
 
 ##### Note
 
-Although you can give `Money.make/1` a float to create a money struct,
+Although you can give `Money.make/2` a float to create a money struct,
 serves only as a convenience utility and none of the internal operactions 
 are done on floats but rather on the basic fractional units (integers).
 
