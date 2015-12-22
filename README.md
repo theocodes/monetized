@@ -81,7 +81,7 @@ config :monetized, config: [
 
 ```elixir
 def deps do
-  [{:monetized, "~> 0.1.0"}]
+  [{:monetized, "~> 0.2.0"}]
 end
 
 ```
