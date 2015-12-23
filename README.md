@@ -4,7 +4,7 @@
 
 As a general rule, using floats to store money is a [bad idea](http://spin.atomicobject.com/2014/08/14/currency-rounding-errors/).
 
-Integers on the other hand are great. 
+Integers on the other hand are great!
 
 However, in order for it to be an actual viable option we must first lay some groundwork and this is why Monetized library exists.
 
@@ -28,7 +28,7 @@ Math.add(item_one, item_two) == %Monetized.Money{currency: "GBP", units: 21075}
 # Or an integer
 balance = Money.make(100_000_00, [units: true])
 
-# Substracting from money
+# Subtracting from money
 result = Math.sub(balance, 50_000)
 result == %Monetized.Money{currency: "USD", units: 5000000}
 
