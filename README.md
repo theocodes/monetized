@@ -54,7 +54,7 @@ Money.from_float(200.50) == %Monetized.Money{currency: "USD", units: 20050}
 Money.from_integer("10") # This will raise FunctionClauseError
 ```
 
-Check the [docs](http://hexdocs.pm/monetized/0.1.0/) for more examples
+Check the [docs](http://hexdocs.pm/monetized/0.2.0/) for more examples
 
 ##### Note
 
