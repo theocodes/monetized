@@ -87,8 +87,8 @@ end
 
 ## TODO
 
-[] Add more currencies (currenctly only supports USD, GBP and EUR)
-[] Get feedback...
+- [ ] Add more currencies (currenctly only supports USD, GBP and EUR)
+- [ ] Get feedback...
 
 ## Contributing
 
