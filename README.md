@@ -74,7 +74,6 @@ config :monetized, config: [
 ]
 ```
 
-
 ## Installation
 
   Add monetized to your list of dependencies in `mix.exs`:
@@ -85,6 +84,11 @@ def deps do
 end
 
 ```
+
+## TODO
+
+[] Add more currencies (currenctly only supports USD, GBP and EUR)
+[] Get feedback...
 
 ## Contributing
 
