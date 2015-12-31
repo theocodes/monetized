@@ -8,6 +8,11 @@ Integers on the other hand are great!
 
 However, in order for it to be an actual viable option we must first lay some groundwork and this is why Monetized library exists.
 
+## Notice
+
+This library is currently under active development and as such you
+should be aware the the API may or may not change drastically.
+
 ## Usage
 
 ```elixir
@@ -87,6 +92,7 @@ end
 
 ## TODO
 
+- [ ] Refactor fractional values to use Decimal
 - [ ] Add more currencies (currenctly only supports USD, GBP and EUR)
 - [ ] Get feedback...
 
