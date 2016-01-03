@@ -1,91 +1,107 @@
 defmodule Monetized.Math do
   alias Monetized.Money
-  
+  alias Decimal
+
   @moduledoc """
-  
-  This modules defines mathematical operations using money.
 
-  All functions in this module take either money struct as
-  parameters from which the currency is copied or it will
-  convert the given values into a money struct using
-  `Monetized.Money.make/1` which in turn will use the default
-  currency.
-  
+  This module defines arithmetical operations on money.
+
+  All functions in this module take either money structs as
+  parameters from which the currency for the result is inferred or
+  if you don't care for the currency, any of the `Monetized.Money.make/2`
+  supported values.
+
+  A error will be raised if the money structs hold distinct non nil
+  values.
+
   """
-  
+
   @doc """
-  
-  Adds money to money returning a money struct with
-  the result.
-  
-  ## Examples
-  
-      iex> payment_one = Monetized.Money.make(10, [currency: "GBP"])
-      ...> payment_two = Monetized.Money.make(20.50, [currency: "GBP"])
-      ...> result = Monetized.Math.add(payment_one, payment_two)
-      ...> Monetized.Money.to_string(result, [show_currency: true])
-      "£ 30.50"
-      
-      iex> result = Monetized.Math.add(100.50, 200)
-      ...> Monetized.Money.to_string(result, [show_currency: true])
-      "$ 300.50"
 
-      iex> result = Monetized.Math.add("£100", "£1,350.25")
-      ...> Monetized.Money.to_string(result, [show_currency: true])
-      "£ 1,450.25"
-      
+  Adds two values and returns a money struct with
+  the result.
+
+  ## Examples
+
+    iex> value_one = Monetized.Money.make(10)
+    ...> value_two = Monetized.Money.make(20.50)
+    ...> Monetized.Math.add(value_one, value_two)
+    #Money<30.50>
+
+    iex> five_euros = Monetized.Money.make("€ 5")
+    ...> result = Monetized.Math.add(five_euros, 20)
+    ...> Monetized.Money.to_string(result, [show_currency: true])
+    "€ 25.00"
+
+    iex> Monetized.Math.add("£ 100", "£ 1,350.25")
+    #Money<1450.25GBP>
+
   """
 
-  @spec add(Money.money | String.t | integer | float, Money.money | String.t | integer | float) :: Money.money
-  
+  @spec add(Money.money | String.t | integer | float | Decimal, Money.money | String.t | integer | float | Decimal) :: Money.money
+
   def add(a, b) do
     a = to_money(a)
     b = to_money(b)
-    
-    a.units + b.units 
-    |> Money.make([currency: a.currency, units: true])
+    c = determine_currency(a.currency, b.currency)
+
+    Decimal.add(a.decimal, b.decimal)
+    |> Money.make([currency: c])
   end
-  
-  
+
+
   @doc """
-  
+
   Substracts money from money returning a money struct
   with the result.
-  
-  ## Examples
-  
-      iex> payment_one = Monetized.Money.make(50)
-      ...> payment_two = Monetized.Money.make(51)
-      ...> Monetized.Math.sub(payment_one, payment_two)
-      %Monetized.Money{currency: "USD", units: -100}
-      
-      iex> payment_one = Monetized.Money.make(2000)
-      ...> payment_two = Monetized.Money.make(150.25)
-      ...> result = Monetized.Math.sub(payment_one, payment_two)
-      ...> Monetized.Money.to_string(result, [show_currency: true])
-      "$ 1,849.75"
-      
-      iex> result = Monetized.Math.sub(100.50, 200)
-      ...> Monetized.Money.to_string(result, [show_currency: true])
-      "$ -99.50"
 
-      iex> result = Monetized.Math.sub("£ -100", "£ 1,200.00")
-      ...> Monetized.Money.to_string(result, [show_currency: true])
-      "£ -1,300.00"
-      
+  ## Examples
+
+    iex> payment_one = Monetized.Money.make(50)
+    ...> payment_two = Monetized.Money.make(51, [currency: "EUR"])
+    ...> Monetized.Math.sub(payment_one, payment_two)
+    #Money<-1.00EUR>
+
+    iex> payment_one = Monetized.Money.make(2000)
+    ...> payment_two = Monetized.Money.make(150.25)
+    ...> result = Monetized.Math.sub(payment_one, payment_two)
+    ...> Monetized.Money.to_string(result, [show_currency: true])
+    "1,849.75"
+
+    iex> result = Monetized.Math.sub(100.50, 200)
+    ...> Monetized.Money.to_string(result, [show_currency: true])
+    "-99.50"
+
+    iex> result = Monetized.Math.sub("£ -100", "1,200.00")
+    ...> Monetized.Money.to_string(result, [show_currency: true])
+    "£ -1,300.00"
+
   """
 
-  @spec sub(Money.money | String.t | integer | float, Money.money | String.t | integer | float) :: Money.money
-  
+  @spec sub(Money.money | String.t | integer | float | Decimal, Money.money | String.t | integer | float | Decimal) :: Money.money
+
   def sub(a, b) do
     a = to_money(a)
     b = to_money(b)
-    
-    a.units - b.units
-    |> Money.make([currency: a.currency, units: true])
+    c = determine_currency(a.currency, b.currency)
+
+    Decimal.sub(a.decimal, b.decimal)
+    |> Money.make([currency: c])
   end
-  
-  defp to_money(money) when is_map(money), do: money
+
+  defp to_money(%Monetized.Money{} = money), do: money
   defp to_money(amount), do: Money.make(amount)
+
+  defp determine_currency(nil, b), do: b
+  defp determine_currency(a, nil), do: a
+  defp determine_currency(nil, nil), do: nil
+  defp determine_currency(a, b) do
+    if a != b, do: raise_currency_conflict
+    a || b
+  end
+
+  defp raise_currency_conflict do
+    raise "Math requires both values to be of the same currency."
+  end
 
 end

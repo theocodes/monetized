@@ -4,9 +4,11 @@
 
 As a general rule, using floats to store money is a [bad idea](http://spin.atomicobject.com/2014/08/14/currency-rounding-errors/).
 
-Integers on the other hand are great. 
+Enter Monetized. A library that aims to facilitate the handling of money by providing a safe way to store currency values and
+abstractions to perform arithmetical operations on those values.
 
-However, in order for it to be an actual viable option we must first lay some groundwork and this is why Monetized library exists.
+It leverages [Decimal](https://github.com/ericmj/decimal)'s ability to safely handle arbitrary precision and the fact that it
+plays nicely with [Ecto](https://github.com/elixir-lang/ecto).
 
 ## Usage
 
@@ -15,52 +17,60 @@ alias Monetized.Money
 alias Monetized.Math
 
 # Create with a string
-item_one = Money.make("£ 200.50")
-item_one == %Monetized.Money{currency: "GBP", units: 20050}
+iex> item_one = Money.make("£ 200.50")
+#Money<200.50GBP>
 
 # Or a float
-item_two = Money.make(10.25, [currency: "GBP"])
-item_two == %Monetized.Money{currency: "GBP", units: 1025}
+iex> item_two = Money.make(10.25, [currency: "GBP"])
+#Money<10.25GBP>
 
 # Adding two moneys together
-Math.add(item_one, item_two) == %Monetized.Money{currency: "GBP", units: 21075}
+iex> Math.add(item_one, item_two)
+#Money<210.75GBP>
 
 # Or an integer
-balance = Money.make(100_000_00, [units: true])
+iex> balance = Money.make(100_000, [currency: "USD"])
+#Money<100000.00USD>
 
-# Substracting from money
-result = Math.sub(balance, 50_000)
-result == %Monetized.Money{currency: "USD", units: 5000000}
+# Substracting from money (currency inferred from balance)
+iex> result = Math.sub(balance, 50_000)
+#Money<50000.00USD>
 
 # Getting the string representation
-Money.to_string(result, [show_currency: true]) == "$ 50,000.00"
+iex> Money.to_string(result, [show_currency: true])
+"$ 50,000.00"
 
-# You can also use `from_integer/2`, `from_float/2` and `from_string/2`
+# You can also use `from_integer/2`, `from_float/2`, `from_decimal/2` and `from_string/2`
 # respectively if the desired behavior is to raise when the amount is 
 # not of the expected type.
 
 # If either the symbol or the currency key is found within the string,
 # that currency will be used. However, if a different currency is given in the
 # options, it will take precedence.
-Money.from_string("£ 200") == %Monetized.Money{currency: "GBP", units: 20000}
-Money.from_string("200 EUR") == %Monetized.Money{currency: "EUR", units: 20000}
 
-# Passing `units: true` in the options will make it assume the amount is
-# already in the basic fractional unit format
-Money.from_integer(20050, [units: true]) == %Monetized.Money{currency: "USD", units: 20050}
+iex> Money.from_string("£ 200")
+#Money<200.00GBP>
 
-Money.from_float(200.50) == %Monetized.Money{currency: "USD", units: 20050}
+iex> Money.from_string("200 EUR")
+#Money<200.00EUR>
 
-Money.from_integer("10") # This will raise FunctionClauseError
+iex> Money.from_integer(200)
+#Money<200.00>
+
+iex> Money.from_float(200.50)
+#Money<200.50>
+
+iex> decimal = Decimal.new(10.25)
+...> Money.from_decimal(decimal, currency: "EUR")
+#Money<10.15EUR>
+
+iex> Money.from_integer("10")
+** (FunctionClauseError) no function clause matching in Monetized.Money.from_integer/2
+    (monetized) lib/money.ex:204: Monetized.Money.from_integer("10", [])
+
 ```
 
-Check the [docs](http://hexdocs.pm/monetized/0.1.0/) for more examples
-
-##### Note
-
-Although you can give `Money.make/2` a float to create a money struct,
-serves only as a convenience utility and none of the internal operactions 
-are done on floats but rather on the basic fractional units (integers).
+Check the [docs](http://hexdocs.pm/monetized/0.3.0/) for more examples
 
 ## Config
 
@@ -81,7 +91,7 @@ config :monetized, config: [
 
 ```elixir
 def deps do
-  [{:monetized, "~> 0.2.0"}]
+  [{:monetized, "~> 0.3.0"}]
 end
 
 ```

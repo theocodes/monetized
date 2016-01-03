@@ -5,7 +5,7 @@ defmodule Monetized.Mixfile do
     [app: :monetized,
      name: "Monetized",
      source_url: "https://github.com/theocodes/monetized",
-     version: "0.2.0",
+     version: "0.3.0",
      elixir: "~> 1.1",
      description: description,
      package: package,
@@ -22,7 +22,8 @@ defmodule Monetized.Mixfile do
     [
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 0.1", only: :dev},
-      {:inch_ex, only: :docs}
+      {:inch_ex, only: :docs},
+      { :decimal, "~> 1.1.0" }
     ]
   end
 
@@ -37,7 +38,7 @@ defmodule Monetized.Mixfile do
 
   defp description do
     """
-    
+
     A lightweight solution for handling and storing money.
 
     """
