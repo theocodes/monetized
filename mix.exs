@@ -23,7 +23,8 @@ defmodule Monetized.Mixfile do
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 0.1", only: :dev},
       {:inch_ex, only: :docs},
-      { :decimal, "~> 1.1.0" }
+      {:decimal, "~> 1.1.0"},
+      {:ecto, "~> 1.1.1"}
     ]
   end
 
@@ -32,7 +33,7 @@ defmodule Monetized.Mixfile do
       maintainers: ["Thiago Felippe"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/theocodes/monetized",
-              "Docs" => "http://hexdocs.pm/monetized/0.2.0"}
+              "Docs" => "http://hexdocs.pm/monetized/0.3.0"}
     ]
   end
 

@@ -7,9 +7,13 @@ defmodule Monetized.Money do
 
   Defines the money struct and functions to handle it.
 
+  Also defines `Money` Ecto.Type.
+
   Although we're able to override any configuration when
   calling functions that create/handle money, it is possible
   to change any of the default values seen below, through config.
+
+  Below are the configuration options.
 
   ## Examples
 
@@ -31,7 +35,53 @@ defmodule Monetized.Money do
 
   @type money :: %Monetized.Money{}
 
-  defstruct currency: nil, decimal: nil
+  defstruct decimal: Decimal.new("0.00"), currency: nil
+
+  @behaviour Ecto.Type
+
+  def type, do: :money
+
+  def cast(%Monetized.Money{} = money) do
+    {:ok, money}
+  end
+
+  def cast(%{"amount" => a, "currency" => c}) do
+    {:ok, Monetized.Money.make(a, [currency: c])}
+  end
+
+  def cast(%{amount: a, currency: c}) do
+    {:ok, Monetized.Money.make(a, [currency: c])}
+  end
+
+  def cast(amount) when is_bitstring(amount) do
+    {:ok, Monetized.Money.from_string(amount)}
+  end
+
+  def cast(amount) when is_float(amount) do
+    {:ok, Monetized.Money.from_float(amount)}
+  end
+
+  def cast(amount) when is_integer(amount) do
+    {:ok, Monetized.Money.from_integer(amount)}
+  end
+
+  def cast(%Decimal{} = amount) do
+    {:ok, Monetized.Money.from_decimal(amount)}
+  end
+
+  def cast(_), do: :error
+
+  def dump(%Monetized.Money{decimal: d, currency: c}) do
+    {:ok, %{"decimal" => d, "currency" => c}}
+  end
+
+  def dump(_), do: :error
+
+  def load(%{"decimal" => d, "currency" => c}) do
+    {:ok, %Monetized.Money{decimal: d, currency: c}}
+  end
+
+  def load(_), do: :error
 
   @doc """
 
