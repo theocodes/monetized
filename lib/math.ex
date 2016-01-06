@@ -30,7 +30,7 @@ defmodule Monetized.Math do
 
     iex> five_euros = Monetized.Money.make("€ 5")
     ...> result = Monetized.Math.add(five_euros, 20)
-    ...> Monetized.Money.to_string(result, [show_currency: true])
+    ...> Monetized.Money.to_string(result, [currency_symbol: true])
     "€ 25.00"
 
     iex> Monetized.Math.add("£ 100", "£ 1,350.25")
@@ -45,7 +45,7 @@ defmodule Monetized.Math do
     b = to_money(b)
     c = determine_currency(a.currency, b.currency)
 
-    Decimal.add(a.decimal, b.decimal)
+    Decimal.add(a.value, b.value)
     |> Money.make([currency: c])
   end
 
@@ -65,15 +65,15 @@ defmodule Monetized.Math do
     iex> payment_one = Monetized.Money.make(2000)
     ...> payment_two = Monetized.Money.make(150.25)
     ...> result = Monetized.Math.sub(payment_one, payment_two)
-    ...> Monetized.Money.to_string(result, [show_currency: true])
+    ...> Monetized.Money.to_string(result)
     "1,849.75"
 
     iex> result = Monetized.Math.sub(100.50, 200)
-    ...> Monetized.Money.to_string(result, [show_currency: true])
+    ...> Monetized.Money.to_string(result)
     "-99.50"
 
     iex> result = Monetized.Math.sub("£ -100", "1,200.00")
-    ...> Monetized.Money.to_string(result, [show_currency: true])
+    ...> Monetized.Money.to_string(result, [currency_symbol: true])
     "£ -1,300.00"
 
   """
@@ -85,7 +85,7 @@ defmodule Monetized.Math do
     b = to_money(b)
     c = determine_currency(a.currency, b.currency)
 
-    Decimal.sub(a.decimal, b.decimal)
+    Decimal.sub(a.value, b.value)
     |> Money.make([currency: c])
   end
 

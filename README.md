@@ -4,13 +4,50 @@
 
 As a general rule, using floats to store money is a [bad idea](http://spin.atomicobject.com/2014/08/14/currency-rounding-errors/).
 
-Enter Monetized. A library that aims to facilitate the handling of money by providing a safe way to store currency values and
-abstractions to perform arithmetical operations on those values.
+Enter Monetized. A library that aims to facilitate the handling of money through a safe way to store currency values and
+and providing abstractions to perform arithmetical operations on those values.
 
-It leverages [Decimal](https://github.com/ericmj/decimal)'s ability to safely handle arbitrary precision and the fact that it
-plays nicely with [Ecto](https://github.com/elixir-lang/ecto).
+Monetized leverages [Decimal](https://github.com/ericmj/decimal)'s ability to safely handle arbitrary precision to perform calculations
+on money values.
+
+A typical `%Monetized.Money{}` struct will contain a value in the shape of a `Decimal` struct and a currency (if any) as a string.
 
 ## Usage
+
+Monetized also ships with a `Ecto.Type` that gives us an easier way to store money.
+
+```elixir
+
+alias Monetized.Money
+
+schema "transaction" do
+  field :description, :string
+  field :balance, Money, default: Money.zero
+
+  timestamps
+end
+
+```
+
+By doing this we're able to pass a `%Money{}` struct to the changeset and
+insert in the `Repo` since Ecto knows how to convert that struct into a primitive
+type to save and back when you read from it.
+
+```elixir
+
+balance = Money.make("£ 100.50")
+changeset = Transaction.changeset(%Transaction{}, %{description: "Invoice payment", balance: balance})
+
+# Or
+
+balance = %{value: "100.50", currency: "GBP"}
+changeset = Transaction.changeset(%Transaction{}, %{description: "Invoice payment", balance: balance})
+
+```
+
+Check the [docs](http://hexdocs.pm/monetized/0.3.0/Monetized.Money.html) for more.
+
+## Other usage
 
 ```elixir
 alias Monetized.Money

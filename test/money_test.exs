@@ -3,55 +3,55 @@ defmodule Monetized.MoneyTest do
   alias Monetized.Money
   doctest Monetized.Money
 
-  @money %Money{decimal: Decimal.new("100.50"), currency: "GBP"}
+  @money %Money{value: Decimal.new("100.50"), currency: "GBP"}
 
   test "cast itself" do
     assert Money.cast(@money) == {:ok, @money}
   end
 
   test "cast with amount and currency" do
-    params = %{"amount" => Decimal.new("100.50"), "currency" => "GBP"}
+    params = %{"value" => Decimal.new("100.50"), "currency" => "GBP"}
     assert Money.cast(params) == {:ok, @money}
 
-    params = %{amount: Decimal.new("100.50"), currency: "GBP"}
+    params = %{value: Decimal.new("100.50"), currency: "GBP"}
     assert Money.cast(params) == {:ok, @money}
   end
 
   test "cast with string amount only" do
-    expected = %Money{decimal: Decimal.new("10.50"), currency: nil}
+    expected = %Money{value: Decimal.new("10.50"), currency: nil}
     assert Money.cast("10.50") == {:ok, expected}
 
-    expected = %Money{decimal: Decimal.new("10.50"), currency: "EUR"}
+    expected = %Money{value: Decimal.new("10.50"), currency: "EUR"}
     assert Money.cast("€ 10.50") == {:ok, expected}
 
-    expected = %Money{decimal: Decimal.new("10.50"), currency: "USD"}
+    expected = %Money{value: Decimal.new("10.50"), currency: "USD"}
     assert Money.cast("USD 10.50") == {:ok, expected}
   end
 
   test "cast with float amount only" do
-    expected = %Money{decimal: Decimal.new("300.50"), currency: nil}
+    expected = %Money{value: Decimal.new("300.50"), currency: nil}
     assert Money.cast(300.50) == {:ok, expected}
   end
 
   test "cast with integer amount only" do
-    expected = %Money{decimal: Decimal.new("10.00"), currency: nil}
+    expected = %Money{value: Decimal.new("10.00"), currency: nil}
     assert Money.cast(10) == {:ok, expected}
   end
 
   test "cast with decimal amount only" do
-    expected = %Money{decimal: Decimal.new("20.52"), currency: nil}
+    expected = %Money{value: Decimal.new("20.52"), currency: nil}
     assert Money.cast(Decimal.new("20.52")) == {:ok, expected}
   end
 
   test "dump iself into a money duplet" do
-    assert Money.dump(@money) == {:ok, %{"decimal" => Decimal.new("100.50"), "currency" => "GBP"}}
+    assert Money.dump(@money) == {:ok, "100.50 GBP"}
 
-    m = %Money{decimal: Decimal.new("50.25"), currency: nil}
-    assert Money.dump(m) == {:ok, %{"decimal" => Decimal.new("50.25"), "currency" => nil}}
+    m = %Money{value: Decimal.new("50.25"), currency: nil}
+    assert Money.dump(m) == {:ok, "50.25"}
   end
 
   test "load a money duplet" do
-    assert Money.load(%{"decimal" => Decimal.new("100.50"), "currency" => "GBP"}) == {:ok, @money}
+    assert Money.load("100.50 GBP") == {:ok, @money}
     assert Money.load(@money) == :error
   end
 

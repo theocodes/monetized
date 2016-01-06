@@ -35,50 +35,86 @@ defmodule Monetized.Money do
 
   @type money :: %Monetized.Money{}
 
-  defstruct decimal: Decimal.new("0.00"), currency: nil
+  defstruct value: Decimal.new("0.00"), currency: nil
 
   @behaviour Ecto.Type
 
-  def type, do: :money
+  @doc """
+
+  The Ecto primitive type.
+
+  """
+
+  def type, do: :string
+
+  @doc """
+
+  Casts the given value to money.
+
+  It supports:
+
+    * A string (if currency not relevant).
+    * A float (if currency not relevant).
+    * An `Decimal` struct (if currency not relevant).
+    * An integer (if currency not relevant).
+    * A map with `:value` and `:currency` keys.
+    * A map with "value" and "currency" keys.
+    * An `Monetized.Money` struct.
+
+  """
 
   def cast(%Monetized.Money{} = money) do
     {:ok, money}
   end
 
-  def cast(%{"amount" => a, "currency" => c}) do
-    {:ok, Monetized.Money.make(a, [currency: c])}
+  def cast(%{"value" => v, "currency" => c}) do
+    {:ok, Monetized.Money.make(v, [currency: c])}
   end
 
-  def cast(%{amount: a, currency: c}) do
-    {:ok, Monetized.Money.make(a, [currency: c])}
+  def cast(%{value: v, currency: c}) do
+    {:ok, Monetized.Money.make(v, [currency: c])}
   end
 
-  def cast(amount) when is_bitstring(amount) do
-    {:ok, Monetized.Money.from_string(amount)}
+  def cast(value) when is_bitstring(value) do
+    {:ok, Monetized.Money.from_string(value)}
   end
 
-  def cast(amount) when is_float(amount) do
-    {:ok, Monetized.Money.from_float(amount)}
+  def cast(value) when is_float(value) do
+    {:ok, Monetized.Money.from_float(value)}
   end
 
-  def cast(amount) when is_integer(amount) do
-    {:ok, Monetized.Money.from_integer(amount)}
+  def cast(value) when is_integer(value) do
+    {:ok, Monetized.Money.from_integer(value)}
   end
 
-  def cast(%Decimal{} = amount) do
-    {:ok, Monetized.Money.from_decimal(amount)}
+  def cast(%Decimal{} = value) do
+    {:ok, Monetized.Money.from_decimal(value)}
   end
 
   def cast(_), do: :error
 
-  def dump(%Monetized.Money{decimal: d, currency: c}) do
-    {:ok, %{"decimal" => d, "currency" => c}}
+  @doc """
+
+  Converts an `Monetized.Money` into a string for
+  saving to the db. ie: "100.50 EUR"
+
+  """
+
+  def dump(%Monetized.Money{} = money) do
+    {:ok, Monetized.Money.to_string(money, [currency_code: true])}
   end
 
   def dump(_), do: :error
 
-  def load(%{"decimal" => d, "currency" => c}) do
-    {:ok, %Monetized.Money{decimal: d, currency: c}}
+  @doc """
+
+  Converts a string as saved to the db into a
+  `Monetized.Money` struct.
+
+  """
+
+  def load(m) when is_bitstring(m) do
+    {:ok, Monetized.Money.make(m)}
   end
 
   def load(_), do: :error
@@ -90,21 +126,25 @@ defmodule Monetized.Money do
   ## Examples
 
     iex> money = Monetized.Money.make("£ 20150.25")
-    ...> Monetized.Money.to_string(money, [show_currency: true])
+    ...> Monetized.Money.to_string(money, [currency_symbol: true])
     "£ 20,150.25"
 
     # Ignores currency as there isn't one
     iex> money = Monetized.Money.make(999999999)
-    ...> Monetized.Money.to_string(money, [delimiter: " ", separator: " ", show_currency: true])
+    ...> Monetized.Money.to_string(money, [delimiter: " ", separator: " ", currency_symbol: true])
     "999 999 999 00"
 
     iex> money = Monetized.Money.make(100_000_000, [currency: "USD"])
-    ...> Monetized.Money.to_string(money, [format: "%n%s%d %c", show_currency: true])
+    ...> Monetized.Money.to_string(money, [format: "%n%s%d %cs", currency_symbol: true])
     "100,000,000.00 $"
 
     iex> money = Monetized.Money.make(-99.50, [currency: "USD"])
-    ...> Monetized.Money.to_string(money, [show_currency: true])
+    ...> Monetized.Money.to_string(money, [currency_symbol: true])
     "$ -99.50"
+
+    iex> money = Monetized.Money.make("100.50 EUR")
+    ...> Monetized.Money.to_string(money, [currency_code: true])
+    "100.50 EUR"
 
   """
 
@@ -114,21 +154,26 @@ defmodule Monetized.Money do
     delimiter = option_or_config(config, options, :delimiter)
     separator = option_or_config(config, options, :separator)
 
-    [base, decimal] = Regex.split(~r/\./, Decimal.to_string(money.decimal))
+    [base, decimal] = Regex.split(~r/\./, Decimal.to_string(money.value))
 
     number = String.to_integer(base)
     |> delimit_integer(delimiter)
     |> String.Chars.to_string
 
-    currency = if options[:show_currency] && money.currency,
+    cs = if options[:currency_symbol] && money.currency,
       do: Currency.get(money.currency).symbol,
     else: ""
 
+    cc = if options[:currency_code] && money.currency,
+    do: Currency.get(money.currency).key,
+    else: ""
+
     option_or_config(config, options, :format)
-    |> String.replace(~r/%c/, currency)
+    |> String.replace(~r/%cs/, cs)
     |> String.replace(~r/%n/, number)
     |> String.replace(~r/%s/, separator)
     |> String.replace(~r/%d/, decimal)
+    |> String.replace(~r/%cc/, cc)
     |> String.strip
   end
 
@@ -170,8 +215,8 @@ defmodule Monetized.Money do
     do_make(amount, options)
   end
 
-  defp do_make(%Decimal{} = decimal, options) do
-    from_decimal(decimal, options)
+  defp do_make(%Decimal{} = value, options) do
+    from_decimal(value, options)
   end
 
   defp do_make(amount, options) when is_bitstring(amount) do
@@ -310,24 +355,44 @@ defmodule Monetized.Money do
 
   @spec from_decimal(Decimal, list) :: money
 
-  def from_decimal(amount, options \\ []) do
+  def from_decimal(value, options \\ []) do
     currency_key = option_or_config(config, options, :currency)
 
-    str = Decimal.to_string(amount)
+    str = Decimal.to_string(value)
     Regex.replace(~r/\.(\d)$/, str, ".\\g{1}0")
     |> Decimal.new
     |> create(currency_key)
   end
 
-  defp create(amount, currency_key) do
-    %Monetized.Money{currency: currency_key, decimal: amount}
+  @doc """
+
+  Creates a money struct with 0 value.
+
+  Useful for setting a default value of "0.00".
+
+  ## Examples
+
+    iex> Monetized.Money.zero
+    #Money<0.00>
+
+    iex> Monetized.Money.zero([currency: "GBP"])
+    #Money<0.00GBP>
+
+  """
+
+  def zero(options \\ []) do
+    from_string("0.00", options)
+  end
+
+  defp create(value, currency_key) do
+    %Monetized.Money{value: value, currency: currency_key}
   end
 
   defp config do
     defaults = [
       delimiter: ",",
       separator: ".",
-      format: "%c %n%s%d"
+      format: "%cs %n%s%d %cc"
     ]
 
     Dict.merge(defaults, Application.get_env(:monetized, :config, []))
@@ -336,9 +401,9 @@ defmodule Monetized.Money do
   defimpl Inspect, for: Monetized.Money do
     def inspect(dec, _opts) do
       if dec.currency do
-        "#Money<" <> Decimal.to_string(dec.decimal) <> dec.currency <> ">"
+        "#Money<" <> Decimal.to_string(dec.value) <> dec.currency <> ">"
       else
-        "#Money<" <> Decimal.to_string(dec.decimal) <> ">"
+        "#Money<" <> Decimal.to_string(dec.value) <> ">"
       end
     end
   end
