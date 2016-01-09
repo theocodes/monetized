@@ -12,6 +12,11 @@ on money values.
 
 A typical `%Monetized.Money{}` struct will contain a value in the shape of a `Decimal` struct and a currency (if any) as a string.
 
+## Notice
+
+This library is currently under active development and as such you
+should be aware the the API may or may not change drastically.
+
 ## Usage
 
 Monetized also ships with a `Ecto.Type` that gives us an easier way to store money.
@@ -121,7 +126,6 @@ config :monetized, config: [
 ]
 ```
 
-
 ## Installation
 
   Add monetized to your list of dependencies in `mix.exs`:
@@ -132,6 +136,13 @@ def deps do
 end
 
 ```
+
+## TODO
+
+- [x] Refactor fractional values to use Decimal
+- [x] Add Ecto.Type
+- [ ] Add more currencies (currenctly only supports USD, GBP and EUR)
+- [ ] Get feedback...
 
 ## Contributing
 
