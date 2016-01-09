@@ -50,7 +50,7 @@ changeset = Transaction.changeset(%Transaction{}, %{description: "Invoice paymen
 
 ```
 
-Check the [docs](http://hexdocs.pm/monetized/0.3.0/Monetized.Money.html) for more.
+Check the [docs](http://hexdocs.pm/monetized/0.3.1/Monetized.Money.html) for more.
 
 ## Other usage
 
@@ -112,7 +112,7 @@ iex> Money.from_integer("10")
 
 ```
 
-Check the [docs](http://hexdocs.pm/monetized/0.3.0/) for more examples
+Check the [docs](http://hexdocs.pm/monetized/0.3.1/) for more examples
 
 ## Config
 
