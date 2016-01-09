@@ -125,26 +125,26 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> money = Monetized.Money.make("£ 20150.25")
-    ...> Monetized.Money.to_string(money, [currency_symbol: true])
-    "£ 20,150.25"
+      iex> money = Monetized.Money.make("£ 20150.25")
+      ...> Monetized.Money.to_string(money, [currency_symbol: true])
+      "£ 20,150.25"
 
-    # Ignores currency as there isn't one
-    iex> money = Monetized.Money.make(999999999)
-    ...> Monetized.Money.to_string(money, [delimiter: " ", separator: " ", currency_symbol: true])
-    "999 999 999 00"
+      # Ignores currency as there isn't one
+      iex> money = Monetized.Money.make(999999999)
+      ...> Monetized.Money.to_string(money, [delimiter: " ", separator: " ", currency_symbol: true])
+      "999 999 999 00"
 
-    iex> money = Monetized.Money.make(100_000_000, [currency: "USD"])
-    ...> Monetized.Money.to_string(money, [format: "%n%s%d %cs", currency_symbol: true])
-    "100,000,000.00 $"
+      iex> money = Monetized.Money.make(100_000_000, [currency: "USD"])
+      ...> Monetized.Money.to_string(money, [format: "%n%s%d %cs", currency_symbol: true])
+      "100,000,000.00 $"
 
-    iex> money = Monetized.Money.make(-99.50, [currency: "USD"])
-    ...> Monetized.Money.to_string(money, [currency_symbol: true])
-    "$ -99.50"
+      iex> money = Monetized.Money.make(-99.50, [currency: "USD"])
+      ...> Monetized.Money.to_string(money, [currency_symbol: true])
+      "$ -99.50"
 
-    iex> money = Monetized.Money.make("100.50 EUR")
-    ...> Monetized.Money.to_string(money, [currency_code: true])
-    "100.50 EUR"
+      iex> money = Monetized.Money.make("100.50 EUR")
+      ...> Monetized.Money.to_string(money, [currency_code: true])
+      "100.50 EUR"
 
   """
 
@@ -191,21 +191,21 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> Monetized.Money.make("20150.25 EUR")
-    #Money<20150.25EUR>
+      iex> Monetized.Money.make("20150.25 EUR")
+      #Money<20150.25EUR>
 
-    iex> Monetized.Money.make(20150.25, [currency: "EUR"])
-    #Money<20150.25EUR>
+      iex> Monetized.Money.make(20150.25, [currency: "EUR"])
+      #Money<20150.25EUR>
 
-    iex> Decimal.new("100.50") |> Monetized.Money.make
-    #Money<100.50>
+      iex> Decimal.new("100.50") |> Monetized.Money.make
+      #Money<100.50>
 
-    iex> Monetized.Money.make("£ 100")
-    #Money<100.00GBP>
+      iex> Monetized.Money.make("£ 100")
+      #Money<100.00GBP>
 
-    # currency in options takes precedence
-    iex> Monetized.Money.make("€ 50", [currency: "USD"])
-    #Money<50.00USD>
+      # currency in options takes precedence
+      iex> Monetized.Money.make("€ 50", [currency: "USD"])
+      #Money<50.00USD>
 
   """
 
@@ -240,20 +240,20 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> Monetized.Money.from_string("GBP 10.52")
-    #Money<10.52GBP>
+      iex> Monetized.Money.from_string("GBP 10.52")
+      #Money<10.52GBP>
 
-    iex> Monetized.Money.from_string("€ 100")
-    #Money<100.00EUR>
+      iex> Monetized.Money.from_string("€ 100")
+      #Money<100.00EUR>
 
-    iex> Monetized.Money.from_string("100.00", [currency: "EUR"])
-    #Money<100.00EUR>
+      iex> Monetized.Money.from_string("100.00", [currency: "EUR"])
+      #Money<100.00EUR>
 
-    iex> Monetized.Money.from_string("$50")
-    #Money<50.00USD>
+      iex> Monetized.Money.from_string("$50")
+      #Money<50.00USD>
 
-    iex> Monetized.Money.from_string("1,000,000 EUR")
-    #Money<1000000.00EUR>
+      iex> Monetized.Money.from_string("1,000,000 EUR")
+      #Money<1000000.00EUR>
 
   """
 
@@ -286,11 +286,11 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> Monetized.Money.from_integer(152, [currency: "GBP"])
-    #Money<152.00GBP>
+      iex> Monetized.Money.from_integer(152, [currency: "GBP"])
+      #Money<152.00GBP>
 
-    iex> Monetized.Money.from_integer(100_000, [currency: "GBP"])
-    #Money<100000.00GBP>
+      iex> Monetized.Money.from_integer(100_000, [currency: "GBP"])
+      #Money<100000.00GBP>
 
   """
 
@@ -311,14 +311,14 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> Monetized.Money.from_float(100.00, [currency: "EUR"])
-    #Money<100.00EUR>
+      iex> Monetized.Money.from_float(100.00, [currency: "EUR"])
+      #Money<100.00EUR>
 
-    iex> Monetized.Money.from_float(150.52)
-    #Money<150.52>
+      iex> Monetized.Money.from_float(150.52)
+      #Money<150.52>
 
-    # iex> Monetized.Money.from_float(20.50)
-    #Money<20.50>
+      # iex> Monetized.Money.from_float(20.50)
+      #Money<20.50>
 
   """
 
@@ -342,14 +342,14 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> Decimal.new(100.00) |> Monetized.Money.from_decimal([currency: "EUR"])
-    #Money<100.00EUR>
+      iex> Decimal.new(100.00) |> Monetized.Money.from_decimal([currency: "EUR"])
+      #Money<100.00EUR>
 
-    iex> Decimal.new(150.52) |> Monetized.Money.from_decimal
-    #Money<150.52>
+      iex> Decimal.new(150.52) |> Monetized.Money.from_decimal
+      #Money<150.52>
 
-    iex> Decimal.new("300.25") |> Monetized.Money.from_decimal
-    #Money<300.25>
+      iex> Decimal.new("300.25") |> Monetized.Money.from_decimal
+      #Money<300.25>
 
   """
 
@@ -372,11 +372,11 @@ defmodule Monetized.Money do
 
   ## Examples
 
-    iex> Monetized.Money.zero
-    #Money<0.00>
+      iex> Monetized.Money.zero
+      #Money<0.00>
 
-    iex> Monetized.Money.zero([currency: "GBP"])
-    #Money<0.00GBP>
+      iex> Monetized.Money.zero([currency: "GBP"])
+      #Money<0.00GBP>
 
   """
 

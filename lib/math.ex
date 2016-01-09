@@ -23,18 +23,18 @@ defmodule Monetized.Math do
 
   ## Examples
 
-    iex> value_one = Monetized.Money.make(10)
-    ...> value_two = Monetized.Money.make(20.50)
-    ...> Monetized.Math.add(value_one, value_two)
-    #Money<30.50>
+      iex> value_one = Monetized.Money.make(10)
+      ...> value_two = Monetized.Money.make(20.50)
+      ...> Monetized.Math.add(value_one, value_two)
+      #Money<30.50>
 
-    iex> five_euros = Monetized.Money.make("€ 5")
-    ...> result = Monetized.Math.add(five_euros, 20)
-    ...> Monetized.Money.to_string(result, [currency_symbol: true])
-    "€ 25.00"
+      iex> five_euros = Monetized.Money.make("€ 5")
+      ...> result = Monetized.Math.add(five_euros, 20)
+      ...> Monetized.Money.to_string(result, [currency_symbol: true])
+      "€ 25.00"
 
-    iex> Monetized.Math.add("£ 100", "£ 1,350.25")
-    #Money<1450.25GBP>
+      iex> Monetized.Math.add("£ 100", "£ 1,350.25")
+      #Money<1450.25GBP>
 
   """
 
@@ -57,24 +57,24 @@ defmodule Monetized.Math do
 
   ## Examples
 
-    iex> payment_one = Monetized.Money.make(50)
-    ...> payment_two = Monetized.Money.make(51, [currency: "EUR"])
-    ...> Monetized.Math.sub(payment_one, payment_two)
-    #Money<-1.00EUR>
+      iex> payment_one = Monetized.Money.make(50)
+      ...> payment_two = Monetized.Money.make(51, [currency: "EUR"])
+      ...> Monetized.Math.sub(payment_one, payment_two)
+      #Money<-1.00EUR>
 
-    iex> payment_one = Monetized.Money.make(2000)
-    ...> payment_two = Monetized.Money.make(150.25)
-    ...> result = Monetized.Math.sub(payment_one, payment_two)
-    ...> Monetized.Money.to_string(result)
-    "1,849.75"
+      iex> payment_one = Monetized.Money.make(2000)
+      ...> payment_two = Monetized.Money.make(150.25)
+      ...> result = Monetized.Math.sub(payment_one, payment_two)
+      ...> Monetized.Money.to_string(result)
+      "1,849.75"
 
-    iex> result = Monetized.Math.sub(100.50, 200)
-    ...> Monetized.Money.to_string(result)
-    "-99.50"
+      iex> result = Monetized.Math.sub(100.50, 200)
+      ...> Monetized.Money.to_string(result)
+      "-99.50"
 
-    iex> result = Monetized.Math.sub("£ -100", "1,200.00")
-    ...> Monetized.Money.to_string(result, [currency_symbol: true])
-    "£ -1,300.00"
+      iex> result = Monetized.Math.sub("£ -100", "1,200.00")
+      ...> Monetized.Money.to_string(result, [currency_symbol: true])
+      "£ -1,300.00"
 
   """
 

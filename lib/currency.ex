@@ -90,8 +90,8 @@ defmodule Monetized.Currency do
 
   ## Examples
 
-    iex> Monetized.Currency.get("EUR")
-    %{name: "Euro", symbol: "€", key: "EUR"}
+      iex> Monetized.Currency.get("EUR")
+      %{name: "Euro", symbol: "€", key: "EUR"}
 
   """
 
