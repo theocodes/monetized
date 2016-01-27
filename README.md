@@ -79,7 +79,7 @@ iex> result = Math.sub(balance, 50_000)
 #Money<50000.00USD>
 
 # Getting the string representation
-iex> Money.to_string(result, [show_currency: true])
+iex> Money.to_string(result, [currency_symbol: true])
 "$ 50,000.00"
 
 # You can also use `from_integer/2`, `from_float/2`, `from_decimal/2` and `from_string/2`
@@ -122,7 +122,7 @@ config :monetized, config: [
   delimiter: ",",
   separator: ".",
   currency: "USD",
-  format: "%c %n%s%d"
+  format: "%cs %n%s%d"
 ]
 ```
 
