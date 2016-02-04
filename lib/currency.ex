@@ -75,10 +75,7 @@ defmodule Monetized.Currency do
   """
 
   def parse_by_symbol(str) do
-    x =
-      all
-      |> Enum.map(fn {k, v} -> {v.symbol, k} end)
-      |> Enum.into(%{})
+    x = Enum.map(all, fn {k, v} -> {v.symbol, k} end) |> Enum.into(%{})
     case Regex.run(~r/\p{Sc}/u, str) do
       [s] ->
         get(x[s])
