@@ -255,6 +255,9 @@ defmodule Monetized.Money do
       iex> Monetized.Money.from_string("1,000,000 EUR")
       #Money<1000000.00EUR>
 
+      iex> Monetized.Money.from_string("200", currency: "THB")
+      #Money<200.00THB>
+
   """
 
   @spec from_string(String.t, list) :: money

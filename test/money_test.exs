@@ -26,6 +26,9 @@ defmodule Monetized.MoneyTest do
 
     expected = %Money{value: Decimal.new("10.50"), currency: "USD"}
     assert Money.cast("USD 10.50") == {:ok, expected}
+
+    expected = %Money{value: Decimal.new("10.50"), currency: "THB"}
+    assert Money.cast("10.50 THB") == {:ok, expected}
   end
 
   test "cast with float amount only" do
