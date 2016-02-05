@@ -133,7 +133,7 @@ config :monetized, config: [
 
 ```elixir
 def deps do
-  [{:monetized, "~> 0.3.0"}]
+  [{:monetized, "~> 0.3.2"}]
 end
 
 ```
