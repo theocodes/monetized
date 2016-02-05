@@ -22,6 +22,9 @@ defmodule Monetized.Currency do
       iex> Monetized.Currency.parse("200.00 $")
       %{name: "US Dollar", symbol: "$", key: "USD"}
 
+      iex> Monetized.Currency.parse("200.00 THB")
+      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+
   """
 
   def parse(str) do
@@ -43,6 +46,9 @@ defmodule Monetized.Currency do
 
       iex> Monetized.Currency.parse_by_key("200.00 GBP")
       %{name: "Pound Sterling", symbol: "£", key: "GBP"}
+
+      iex> Monetized.Currency.parse_by_key("200.00 THB")
+      %{name: "Thai Baht", symbol: "฿", key: "THB"}
 
   """
 
@@ -72,6 +78,9 @@ defmodule Monetized.Currency do
       iex> Monetized.Currency.parse_by_symbol("£200.00")
       %{name: "Pound Sterling", symbol: "£", key: "GBP"}
 
+      iex> Monetized.Currency.parse_by_symbol("฿200.00")
+      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+
   """
 
   def parse_by_symbol(str) do
@@ -93,6 +102,9 @@ defmodule Monetized.Currency do
       iex> Monetized.Currency.get("EUR")
       %{name: "Euro", symbol: "€", key: "EUR"}
 
+      iex> Monetized.Currency.get("THB")
+      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+
   """
 
   @spec get(String.t) :: struct
@@ -111,6 +123,7 @@ defmodule Monetized.Currency do
     %{
       "EUR" => %{name: "Euro", symbol: "€", key: "EUR"},
       "GBP" => %{name: "Pound Sterling", symbol: "£", key: "GBP"},
+      "THB" => %{name: "Thai Baht", symbol: "฿", key: "THB"},
       "USD" => %{name: "US Dollar", symbol: "$", key: "USD"}
     }
   end
