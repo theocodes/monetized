@@ -12,10 +12,11 @@ on money values.
 
 A typical `%Monetized.Money{}` struct will contain a value in the shape of a `Decimal` struct and a currency (if any) as a string.
 
-## Notice
+## Status
 
-This library is currently under active development and as such you
-should be aware the the API may or may not change drastically.
+The API is stable and will not change unless feedback suggests that it should. So if you're using the library, please do provide feedback so that we can tag 1.0.
+
+If your currency is not yet supported, please submit a PR with the implementation and make it so :)
 
 ## Usage
 
@@ -141,7 +142,7 @@ end
 
 - [x] Refactor fractional values to use Decimal
 - [x] Add Ecto.Type
-- [ ] Add more currencies (currenctly only supports USD, GBP and EUR)
+- [ ] Add more currencies (currenctly only supports USD, GBP, EUR and THB)
 - [ ] Get feedback...
 
 ## Contributing
