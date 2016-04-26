@@ -5,7 +5,7 @@ defmodule Monetized.Mixfile do
     [app: :monetized,
      name: "Monetized",
      source_url: "https://github.com/theocodes/monetized",
-     version: "0.3.2",
+     version: "0.4.0",
      elixir: "~> 1.1",
      description: description,
      package: package,
@@ -31,7 +31,7 @@ defmodule Monetized.Mixfile do
 
   defp package do
     [
-      maintainers: ["Thiago Felippe"],
+      maintainers: ["Theo Felippe"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/theocodes/monetized",
               "Docs" => "http://hexdocs.pm/monetized"}
