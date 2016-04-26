@@ -133,7 +133,7 @@ config :monetized, config: [
 
 ```elixir
 def deps do
-  [{:monetized, "~> 0.3.2"}]
+  [{:monetized, "~> x.x.x"}]
 end
 
 ```
@@ -142,7 +142,7 @@ end
 
 - [x] Refactor fractional values to use Decimal
 - [x] Add Ecto.Type
-- [ ] Add more currencies (currenctly only supports USD, GBP, EUR and THB)
+- [ ] Add more currencies (PRs are welcome)
 - [ ] Get feedback...
 
 ## Contributing
