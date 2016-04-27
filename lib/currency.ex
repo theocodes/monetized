@@ -138,7 +138,8 @@ defmodule Monetized.Currency do
       "HKD" => %{name: "Hong Kong Dollar", symbol: "$", key: "HKD"},
       "PHP" => %{name: "Philippine Peso", symbol: "₱", key: "PHP"},
       "THB" => %{name: "Thai Baht", symbol: "฿", key: "THB"},
-      "USD" => %{name: "US Dollar", symbol: "$", key: "USD"}
+      "USD" => %{name: "US Dollar", symbol: "$", key: "USD"},
+      "ARS" => %{name: "Argentinian Peso", symbol: "$", key: "ARS"}
     }
   end
 
