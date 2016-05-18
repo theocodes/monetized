@@ -20,12 +20,11 @@ defmodule Monetized.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.11", only: :dev},
-      {:earmark, "~> 0.1", only: :dev},
-      {:inch_ex, only: :docs},
-      {:decimal, "~> 1.1.0"},
-      {:ecto, "~> 1.1.1"},
-      {:poison, "~> 1.0"}
+      {:ex_doc,  "~> 0.11.5", only: :dev},
+      {:earmark, "~> 0.2.1",  only: :dev},
+      {:inch_ex, "~> 0.5.1",  only: :docs},
+      {:decimal, "~> 1.1.2"},
+      {:ecto,    "~> 1.1.7"}
     ]
   end
 
