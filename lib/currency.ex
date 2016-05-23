@@ -1,4 +1,14 @@
 defmodule Monetized.Currency do
+  @currencies [
+    %{name: "Euro", symbol: "€", key: "EUR"},
+    %{name: "Pound Sterling", symbol: "£", key: "GBP"},
+    %{name: "Hong Kong Dollar", symbol: "HK$", key: "HKD"},
+    %{name: "Philippine Peso", symbol: "₱", key: "PHP"},
+    %{name: "Thai Baht", symbol: "฿", key: "THB"},
+    %{name: "US Dollar", symbol: "$", key: "USD"},
+  ]
+
+  @currency_map Enum.reduce(@currencies, %{}, fn(currency, acc) -> Map.put(acc, currency.key, currency) end)
 
   @moduledoc """
 
@@ -19,7 +29,7 @@ defmodule Monetized.Currency do
       iex> Monetized.Currency.parse("£ 200.00")
       %{name: "Pound Sterling", symbol: "£", key: "GBP"}
 
-      iex> Monetized.Currency.parse("200.00 $")
+      iex> Monetized.Currency.parse("200.00 USD")
       %{name: "US Dollar", symbol: "$", key: "USD"}
 
       iex> Monetized.Currency.parse("200.00 THB")
@@ -78,7 +88,7 @@ defmodule Monetized.Currency do
       iex> Monetized.Currency.parse_by_symbol("€ 200.00")
       %{name: "Euro", symbol: "€", key: "EUR"}
 
-      iex> Monetized.Currency.parse_by_symbol("200.00 $")
+      iex> Monetized.Currency.parse_by_symbol("$200.00")
       %{name: "US Dollar", symbol: "$", key: "USD"}
 
       iex> Monetized.Currency.parse_by_symbol("£200.00")
@@ -92,15 +102,12 @@ defmodule Monetized.Currency do
 
   """
 
-  def parse_by_symbol(str) do
-    x = Enum.map(all, fn {k, v} -> {v.symbol, k} end) |> Enum.into(%{})
-    case Regex.run(~r/\p{Sc}/u, str) do
-      [s] ->
-        get(x[s])
-      _ ->
-        nil
-    end
-  end
+  @currencies
+  |> Enum.map(&Map.to_list/1)
+  |> Enum.each(fn (currency) ->
+    def parse_by_symbol(unquote(Keyword.get(currency, :symbol)) <> _rest), do: Enum.into(unquote(currency), %{})
+  end)
+  def parse_by_symbol(_), do: nil
 
   @doc """
 
@@ -131,16 +138,7 @@ defmodule Monetized.Currency do
 
   @spec all :: struct
 
-  def all do
-    %{
-      "EUR" => %{name: "Euro", symbol: "€", key: "EUR"},
-      "GBP" => %{name: "Pound Sterling", symbol: "£", key: "GBP"},
-      "HKD" => %{name: "Hong Kong Dollar", symbol: "$", key: "HKD"},
-      "PHP" => %{name: "Philippine Peso", symbol: "₱", key: "PHP"},
-      "THB" => %{name: "Thai Baht", symbol: "฿", key: "THB"},
-      "USD" => %{name: "US Dollar", symbol: "$", key: "USD"}
-    }
-  end
+  def all, do: @currency_map
 
   @doc """
 
