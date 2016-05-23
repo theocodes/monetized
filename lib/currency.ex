@@ -1,5 +1,6 @@
 defmodule Monetized.Currency do
   @currencies [
+    %{name: "Canadian Dollar", symbol: "C$", key: "CAD"},
     %{name: "Euro", symbol: "€", key: "EUR"},
     %{name: "Pound Sterling", symbol: "£", key: "GBP"},
     %{name: "Hong Kong Dollar", symbol: "HK$", key: "HKD"},

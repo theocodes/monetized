@@ -6,5 +6,6 @@ defmodule Monetized.CurrencyTest do
 
   test "parse_by_symbol" do
    assert Currency.parse("$200.00") == %{name: "US Dollar", symbol: "$", key: "USD"}
+   assert Currency.parse("C$200.00") == %{name: "Canadian Dollar", symbol: "C$", key: "CAD"}
   end
 end
