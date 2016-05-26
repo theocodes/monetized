@@ -145,6 +145,14 @@ end
 - [ ] Add more currencies (PRs are welcome)
 - [ ] Get feedback...
 
+## Benchmarking
+
+```sh-session
+$ mix deps.get
+$ MIX_ENV=bench mix compile
+$ MIX_ENV=bench mix bench
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
