@@ -294,15 +294,35 @@ defmodule Monetized.Money do
 
       iex> Monetized.Money.from_integer(100_000, [currency: "GBP"])
       #Money<100000.00GBP>
+      #
+      iex> Monetized.Money.from_integer(-100, [currency: "GBP"])
+      #Money<-100.00GBP>
 
   """
 
   @spec from_integer(integer, list) :: money
 
   def from_integer(amount, options \\ []) when is_integer(amount) do
-    amount
-    |> Integer.to_string
-    |> from_string(options)
+    currency_key = option_or_config(config, options, :currency)
+    do_from_integer(amount, currency_key)
+  end
+
+  defp do_from_integer(amount, currency_key) when amount >= 0 do
+    %Decimal{
+      coef: amount * 100,
+      sign: 1,
+      exp: -2,
+    }
+    |> create(currency_key)
+  end
+
+  defp do_from_integer(amount, currency_key) do
+    %Decimal{
+      coef: -(amount * 100),
+      sign: -1,
+      exp: -2,
+    }
+    |> create(currency_key)
   end
 
   @doc """
@@ -328,9 +348,12 @@ defmodule Monetized.Money do
   @spec from_float(float, list) :: money
 
   def from_float(amount, options \\ []) when is_float(amount) do
+    currency_key = option_or_config(config, options, :currency)
+
     amount
     |> Float.to_string([decimals: 2])
-    |> from_string(options)
+    |> Decimal.new
+    |> create(currency_key)
   end
 
   @doc """
@@ -358,9 +381,17 @@ defmodule Monetized.Money do
 
   @spec from_decimal(Decimal, list) :: money
 
-  def from_decimal(value, options \\ []) do
+  def from_decimal(value = %Decimal{}, options \\ []) do
     currency_key = option_or_config(config, options, :currency)
+    do_from_decimal(value, currency_key)
+  end
 
+  defp do_from_decimal(value = %Decimal{exp: -2}, currency_key) do
+    value
+    |> create(currency_key)
+  end
+
+  defp do_from_decimal(value, currency_key) do
     str = Decimal.to_string(value)
     Regex.replace(~r/\.(\d)$/, str, ".\\g{1}0")
     |> Decimal.new
@@ -384,7 +415,7 @@ defmodule Monetized.Money do
   """
 
   def zero(options \\ []) do
-    from_string("0.00", options)
+    from_integer(0, options)
   end
 
   defp create(value, currency_key) do
