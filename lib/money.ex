@@ -189,7 +189,7 @@ defmodule Monetized.Money do
     |> String.strip
   end
 
-  def decimal_parts(str, decimal_places) do
+  defp decimal_parts(str, decimal_places) do
     case String.split(str, ".") do
       [int]          -> {int, IO.iodata_to_binary(:lists.duplicate(decimal_places, ?0))}
       [int, decimal] -> {int, String.ljust(decimal, decimal_places, ?0)}
