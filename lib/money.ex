@@ -146,15 +146,27 @@ defmodule Monetized.Money do
       ...> Monetized.Money.to_string(money, [currency_code: true])
       "100.50 EUR"
 
+      iex> money = Monetized.Money.make(Decimal.new("10"), currency: "USD")
+      ...> Monetized.Money.to_string(money, currency_symbol: true)
+      "$ 10.00"
+
+      iex> money = Monetized.Money.make(Decimal.new(".005"), currency: "USD")
+      ...> Monetized.Money.to_string(money, currency_symbol: true)
+      "$ 0.01"
   """
 
   @spec to_string(money, list) :: String.t
 
-  def to_string(%Monetized.Money{} = money, options \\ []) do
+  def to_string(%Monetized.Money{value: value} = money, options \\ []) do
     delimiter = option_or_config(config, options, :delimiter)
     separator = option_or_config(config, options, :separator)
+    decimal_places = option_or_config(config, options, :decimal_places)
 
-    [base, decimal] = Regex.split(~r/\./, Decimal.to_string(money.value))
+    {base, decimal} =
+      value
+      |> Decimal.round(decimal_places)
+      |> Decimal.to_string(:normal)
+      |> decimal_parts(decimal_places)
 
     number = String.to_integer(base)
     |> delimit_integer(delimiter)
@@ -175,6 +187,13 @@ defmodule Monetized.Money do
     |> String.replace(~r/%d/, decimal)
     |> String.replace(~r/%cc/, cc)
     |> String.strip
+  end
+
+  def decimal_parts(str, decimal_places) do
+    case String.split(str, ".") do
+      [int]          -> {int, IO.iodata_to_binary(:lists.duplicate(decimal_places, ?0))}
+      [int, decimal] -> {int, String.ljust(decimal, decimal_places, ?0)}
+    end
   end
 
   @doc """
@@ -395,7 +414,8 @@ defmodule Monetized.Money do
     defaults = [
       delimiter: ",",
       separator: ".",
-      format: "%cs %n%s%d %cc"
+      format: "%cs %n%s%d %cc",
+      decimal_places: 2
     ]
 
     Dict.merge(defaults, Application.get_env(:monetized, :config, []))
