@@ -133,6 +133,7 @@ defmodule Monetized.Currency do
 
   def all do
     %{
+      "ARS" => %{name: "Argentinian Peso", symbol: "$", key: "ARS"},
       "EUR" => %{name: "Euro", symbol: "€", key: "EUR"},
       "GBP" => %{name: "Pound Sterling", symbol: "£", key: "GBP"},
       "HKD" => %{name: "Hong Kong Dollar", symbol: "$", key: "HKD"},
