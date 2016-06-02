@@ -33,7 +33,10 @@ defmodule Monetized.Money do
 
   """
 
-  @type money :: %Monetized.Money{}
+  @type t :: %__MODULE__{
+    value: Decimal.t,
+    currency: String.t,
+  }
 
   defstruct value: Decimal.new("0.00"), currency: nil
 
@@ -148,7 +151,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec to_string(money, list) :: String.t
+  @spec to_string(t, list) :: String.t
 
   def to_string(%Monetized.Money{} = money, options \\ []) do
     delimiter = option_or_config(config, options, :delimiter)
@@ -209,7 +212,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec make(integer | float | String.t | Decimal, list) :: money
+  @spec make(integer | float | String.t | Decimal, list) :: t
 
   def make(amount, options \\ []) do
     do_make(amount, options)
@@ -260,7 +263,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_string(String.t, list) :: money
+  @spec from_string(String.t, list) :: t
 
   def from_string(amount, options \\ []) when is_bitstring(amount) do
     if currency = Currency.parse(amount) do
@@ -297,7 +300,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_integer(integer, list) :: money
+  @spec from_integer(integer, list) :: t
 
   def from_integer(amount, options \\ []) when is_integer(amount) do
     amount
@@ -325,7 +328,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_float(float, list) :: money
+  @spec from_float(float, list) :: t
 
   def from_float(amount, options \\ []) when is_float(amount) do
     amount
@@ -356,7 +359,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_decimal(Decimal, list) :: money
+  @spec from_decimal(Decimal, list) :: t
 
   def from_decimal(value, options \\ []) do
     currency_key = option_or_config(config, options, :currency)

@@ -15,7 +15,13 @@ defmodule Monetized.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [
+      applications: [
+        :logger,
+        :decimal,
+        :ecto,
+      ]
+    ]
   end
 
   defp deps do
