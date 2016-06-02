@@ -149,6 +149,9 @@ defmodule Monetized.Money do
       ...> Monetized.Money.to_string(money, [currency_code: true])
       "100.50 EUR"
 
+      iex> money = Monetized.Money.make(Decimal.new("10"))
+      ...> Monetized.Money.to_string(money)
+      "10.00"
   """
 
   @spec to_string(t, list) :: String.t
@@ -157,7 +160,9 @@ defmodule Monetized.Money do
     delimiter = option_or_config(config, options, :delimiter)
     separator = option_or_config(config, options, :separator)
 
-    [base, decimal] = Regex.split(~r/\./, Decimal.to_string(money.value))
+    value_as_string = Decimal.to_string(money.value)
+    value = if String.contains?(value_as_string, "."), do: value_as_string, else: value_as_string <> ".00"
+    [base, decimal] = Regex.split(~r/\./, value)
 
     number = String.to_integer(base)
     |> delimit_integer(delimiter)
