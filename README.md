@@ -137,8 +137,8 @@ end
 
 ## TODO
 
-[] New currencies can be added through the package's config
-[] 1.0.0 ! yay!
+- [ ] New currencies can be added through the package's config
+- [ ] 1.0.0 ! yay!
 
 ## Benchmarking
 
