@@ -26,6 +26,7 @@ defmodule Monetized.Mixfile do
       {:decimal, "~> 1.3.1"},
       {:ecto,    "~> 2.1.3"},
       {:benchfella, "~> 0.3.2", only: :bench},
+      {:poison, "~> 1.5 or ~> 2.0", optional: true},
     ]
   end
 
