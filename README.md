@@ -13,11 +13,7 @@ on money values.
 
 A typical `%Monetized.Money{}` struct will contain a value in the shape of a `Decimal` struct and a currency (if any) as a string.
 
-## Status
-
-The API is stable and will not change unless feedback suggests that it should. So if you're using the library, please do provide feedback so that we can tag 1.0.
-
-If your currency is not yet supported, please submit a PR with the implementation and make it so :)
+Requires elixir version 1.3.x or above as per ecto 2.x
 
 ## Usage
 
