@@ -135,9 +135,10 @@ end
 
 ```
 
-## Adding new currencies
+## TODO
 
-If you wish to use Monetized but your currency isn't supported, please open a PR to add it and I'll be happy to merge it in. ;)
+[] New currencies can be added through the package's config
+[] 1.0.0 ! yay!
 
 ## Benchmarking
 
