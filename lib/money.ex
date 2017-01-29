@@ -33,7 +33,10 @@ defmodule Monetized.Money do
 
   """
 
-  @type money :: %Monetized.Money{}
+  @type t :: %__MODULE__{
+    value: Decimal.t,
+    currency: String.t,
+  }
 
   defstruct value: Decimal.new("0.00"), currency: nil
 
@@ -146,15 +149,20 @@ defmodule Monetized.Money do
       ...> Monetized.Money.to_string(money, [currency_code: true])
       "100.50 EUR"
 
+      iex> money = Monetized.Money.make(Decimal.new("10"))
+      ...> Monetized.Money.to_string(money)
+      "10.00"
   """
 
-  @spec to_string(money, list) :: String.t
+  @spec to_string(t, list) :: String.t
 
   def to_string(%Monetized.Money{} = money, options \\ []) do
     delimiter = option_or_config(config(), options, :delimiter)
     separator = option_or_config(config(), options, :separator)
 
-    [base, decimal] = Regex.split(~r/\./, Decimal.to_string(money.value))
+    value_as_string = Decimal.to_string(money.value)
+    value = if String.contains?(value_as_string, "."), do: value_as_string, else: value_as_string <> ".00"
+    [base, decimal] = Regex.split(~r/\./, value)
 
     number = String.to_integer(base)
     |> delimit_integer(delimiter)
@@ -209,7 +217,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec make(integer | float | String.t | Decimal, list) :: money
+  @spec make(integer | float | String.t | Decimal, list) :: t
 
   def make(amount, options \\ []) do
     do_make(amount, options)
@@ -260,7 +268,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_string(String.t, list) :: money
+  @spec from_string(String.t, list) :: t
 
   def from_string(amount, options \\ []) when is_bitstring(amount) do
     options = if currency = Currency.parse(amount), do: Keyword.merge([currency: currency.key], options), else: options
@@ -291,14 +299,34 @@ defmodule Monetized.Money do
       iex> Monetized.Money.from_integer(100_000, [currency: "GBP"])
       #Money<100000.00GBP>
 
+      iex> Monetized.Money.from_integer(-100, [currency: "GBP"])
+      #Money<-100.00GBP>
+
   """
 
-  @spec from_integer(integer, list) :: money
+  @spec from_integer(integer, list) :: t
 
   def from_integer(amount, options \\ []) when is_integer(amount) do
-    amount
-    |> Integer.to_string
-    |> from_string(options)
+    currency_key = option_or_config(config(), options, :currency)
+    do_from_integer(amount, currency_key)
+  end
+
+  defp do_from_integer(amount, currency_key) when amount >= 0 do
+    %Decimal{
+      coef: amount * 100,
+      sign: 1,
+      exp: -2,
+    }
+    |> create(currency_key)
+  end
+
+  defp do_from_integer(amount, currency_key) do
+    %Decimal{
+      coef: -(amount * 100),
+      sign: -1,
+      exp: -2,
+    }
+    |> create(currency_key)
   end
 
   @doc """
@@ -321,12 +349,15 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_float(float, list) :: money
+  @spec from_float(float, list) :: t
 
   def from_float(amount, options \\ []) when is_float(amount) do
+    currency_key = option_or_config(config(), options, :currency)
+
     amount
     |> :erlang.float_to_binary([decimals: 2])
-    |> from_string(options)
+    |> Decimal.new
+    |> create(currency_key)
   end
 
   @doc """
@@ -352,11 +383,19 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_decimal(Decimal, list) :: money
+  @spec from_decimal(Decimal, list) :: t
 
-  def from_decimal(value, options \\ []) do
+  def from_decimal(value = %Decimal{}, options \\ []) do
     currency_key = option_or_config(config(), options, :currency)
+    do_from_decimal(value, currency_key)
+  end
 
+  defp do_from_decimal(value = %Decimal{exp: -2}, currency_key) do
+    value
+    |> create(currency_key)
+  end
+
+  defp do_from_decimal(value, currency_key) do
     str = Decimal.to_string(value)
     Regex.replace(~r/\.(\d)$/, str, ".\\g{1}0")
     |> Decimal.new
@@ -380,7 +419,7 @@ defmodule Monetized.Money do
   """
 
   def zero(options \\ []) do
-    from_string("0.00", options)
+    from_integer(0, options)
   end
 
   defp create(value, currency_key) do

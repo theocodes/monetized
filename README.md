@@ -1,5 +1,6 @@
 # Monetized
 [![Build Status](https://travis-ci.org/theocodes/monetized.svg?branch=master)](https://travis-ci.org/theocodes/monetized)
+[![Deps Status](https://beta.hexfaktor.org/badge/all/github/theocodes/monetized.svg)](https://beta.hexfaktor.org/github/theocodes/monetized)
 [![Inline docs](http://inch-ci.org/github/theocodes/monetized.svg)](http://inch-ci.org/github/theocodes/monetized)
 
 As a general rule, using floats to store money is a [bad idea](http://spin.atomicobject.com/2014/08/14/currency-rounding-errors/).
@@ -141,6 +142,14 @@ end
 ## Adding new currencies
 
 If you wish to use Monetized but your currency isn't supported, please open a PR to add it and I'll be happy to merge it in. ;)
+
+## Benchmarking
+
+```sh-session
+$ mix deps.get
+$ MIX_ENV=bench mix compile
+$ MIX_ENV=bench mix bench
+```
 
 ## Contributing
 
