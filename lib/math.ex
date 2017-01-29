@@ -45,8 +45,7 @@ defmodule Monetized.Math do
     b = to_money(b)
     c = determine_currency(a.currency, b.currency)
 
-    Decimal.add(a.value, b.value)
-    |> Money.make([currency: c])
+    Decimal.add(a.value, b.value) |> Money.make([currency: c])
   end
 
 
@@ -96,7 +95,7 @@ defmodule Monetized.Math do
   defp determine_currency(a, nil), do: a
   defp determine_currency(nil, nil), do: nil
   defp determine_currency(a, b) do
-    if a != b, do: raise_currency_conflict
+    if a != b, do: raise_currency_conflict()
     a || b
   end
 

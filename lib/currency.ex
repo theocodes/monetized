@@ -59,7 +59,7 @@ defmodule Monetized.Currency do
   """
 
   def parse_by_key(str) do
-    piped = Enum.join(keys, "|")
+    piped = Enum.join(keys(), "|")
     case Regex.scan(~r/#{piped}/, str) do
       [[a]] ->
         get(a)
@@ -93,7 +93,7 @@ defmodule Monetized.Currency do
   """
 
   def parse_by_symbol(str) do
-    x = Enum.map(all, fn {k, v} -> {v.symbol, k} end) |> Enum.into(%{})
+    x = Enum.map(all(), fn {k, v} -> {v.symbol, k} end) |> Enum.into(%{})
     case Regex.run(~r/\p{Sc}/u, str) do
       [s] ->
         get(x[s])
@@ -121,7 +121,7 @@ defmodule Monetized.Currency do
 
   @spec get(String.t) :: struct
 
-  def get(key), do: all[key]
+  def get(key), do: all()[key]
 
   @doc """
 
@@ -129,7 +129,7 @@ defmodule Monetized.Currency do
 
   """
 
-  @spec all :: struct
+  @spec all() :: %{bitstring() => %{name: bitstring(), symbol: bitstring(), key: bitstring()}}
 
   def all do
     %{
@@ -150,6 +150,6 @@ defmodule Monetized.Currency do
 
   @spec keys :: list
 
-  def keys, do: Map.keys(all)
+  def keys, do: Map.keys(all())
 
 end

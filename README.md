@@ -133,17 +133,14 @@ config :monetized, config: [
 
 ```elixir
 def deps do
-  [{:monetized, "~> 0.3.2"}]
+  [{:monetized, "~> 0.5.0"}]
 end
 
 ```
 
-## TODO
+## Adding new currencies
 
-- [x] Refactor fractional values to use Decimal
-- [x] Add Ecto.Type
-- [ ] Add more currencies (currenctly only supports USD, GBP, EUR and THB)
-- [ ] Get feedback...
+If you wish to use Monetized but your currency isn't supported, please open a PR to add it and I'll be happy to merge it in. ;)
 
 ## Contributing
 

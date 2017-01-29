@@ -5,17 +5,17 @@ defmodule Monetized.Mixfile do
     [app: :monetized,
      name: "Monetized",
      source_url: "https://github.com/theocodes/monetized",
-     version: "0.4.0",
-     elixir: "~> 1.1",
-     description: description,
-     package: package,
+     version: "0.5.0",
+     elixir: "~> 1.4.1",
+     description: description(),
+     package: package(),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps()]
   end
 
   def application do
-    [applications: [:logger]]
+    [extra_applications: [:logger]]
   end
 
   defp deps do
@@ -23,9 +23,9 @@ defmodule Monetized.Mixfile do
       {:ex_doc, "~> 0.11.5", only: :dev},
       {:earmark, "~> 0.1", only: :dev},
       {:inch_ex, only: :docs},
-      {:decimal, "~> 1.1.0"},
-      {:ecto, "~> 1.1.1"},
-      {:poison, "~> 1.0"}
+      {:decimal, "~> 1.3.1"},
+      {:ecto, "~> 2.1.3"},
+      {:poison, "~> 3.0.0"}
     ]
   end
 

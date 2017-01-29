@@ -151,8 +151,8 @@ defmodule Monetized.Money do
   @spec to_string(money, list) :: String.t
 
   def to_string(%Monetized.Money{} = money, options \\ []) do
-    delimiter = option_or_config(config, options, :delimiter)
-    separator = option_or_config(config, options, :separator)
+    delimiter = option_or_config(config(), options, :delimiter)
+    separator = option_or_config(config(), options, :separator)
 
     [base, decimal] = Regex.split(~r/\./, Decimal.to_string(money.value))
 
@@ -168,7 +168,7 @@ defmodule Monetized.Money do
     do: Currency.get(money.currency).key,
     else: ""
 
-    option_or_config(config, options, :format)
+    option_or_config(config(), options, :format)
     |> String.replace(~r/%cs/, cs)
     |> String.replace(~r/%n/, number)
     |> String.replace(~r/%s/, separator)
@@ -263,17 +263,13 @@ defmodule Monetized.Money do
   @spec from_string(String.t, list) :: money
 
   def from_string(amount, options \\ []) when is_bitstring(amount) do
-    if currency = Currency.parse(amount) do
-      options = Dict.merge([currency: currency.key], options)
-    end
+    options = if currency = Currency.parse(amount), do: Keyword.merge([currency: currency.key], options), else: options
 
     amount = Regex.run(~r/-?[0-9]{1,300}(,[0-9]{3})*(\.[0-9]+)?/, amount)
     |> List.first
     |> String.replace(~r/\,/, "")
 
-    if Regex.run(~r/\./, amount) == nil do
-      amount = Enum.join([amount, ".00"])
-    end
+    amount = if Regex.run(~r/\./, amount) == nil, do: Enum.join([amount, ".00"]), else: amount
 
     amount
     |> Decimal.new
@@ -329,7 +325,7 @@ defmodule Monetized.Money do
 
   def from_float(amount, options \\ []) when is_float(amount) do
     amount
-    |> Float.to_string([decimals: 2])
+    |> :erlang.float_to_binary([decimals: 2])
     |> from_string(options)
   end
 
@@ -359,7 +355,7 @@ defmodule Monetized.Money do
   @spec from_decimal(Decimal, list) :: money
 
   def from_decimal(value, options \\ []) do
-    currency_key = option_or_config(config, options, :currency)
+    currency_key = option_or_config(config(), options, :currency)
 
     str = Decimal.to_string(value)
     Regex.replace(~r/\.(\d)$/, str, ".\\g{1}0")
@@ -398,7 +394,7 @@ defmodule Monetized.Money do
       format: "%cs %n%s%d %cc"
     ]
 
-    Dict.merge(defaults, Application.get_env(:monetized, :config, []))
+    Keyword.merge(defaults, Application.get_env(:monetized, :config, []))
   end
 
   defimpl Inspect, for: Monetized.Money do
