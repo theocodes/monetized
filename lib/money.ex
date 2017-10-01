@@ -40,7 +40,9 @@ defmodule Monetized.Money do
 
   defstruct value: Decimal.new("0.00"), currency: nil
 
-  @behaviour Ecto.Type
+  if Code.ensure_loaded?(Ecto) do
+    @behaviour Ecto.Type
+  end
 
   @doc """
 
@@ -193,13 +195,13 @@ defmodule Monetized.Money do
     |> String.replace(~r/%s/, separator)
     |> String.replace(~r/%d/, decimal)
     |> String.replace(~r/%cc/, cc)
-    |> String.strip
+    |> String.trim
   end
 
   defp decimal_parts(str, decimal_places) do
     case String.split(str, ".") do
-      [int]          -> {int, IO.iodata_to_binary(:lists.duplicate(decimal_places, ?0))}
-      [int, decimal] -> {int, String.ljust(decimal, decimal_places, ?0)}
+      [int]          -> {int, IO.iodata_to_binary(:lists.duplicate(decimal_places, "0"))}
+      [int, decimal] -> {int, String.pad_trailing(decimal, decimal_places, "0")}
     end
   end
 
