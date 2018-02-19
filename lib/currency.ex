@@ -1,13 +1,16 @@
 defmodule Monetized.Currency do
   @currencies [
-    %{name: "Argentinian Peso", symbol: "A$", key: "ARS"},
-    %{name: "Canadian Dollar", symbol: "C$", key: "CAD"},
-    %{name: "Euro", symbol: "€", key: "EUR"},
-    %{name: "Pound Sterling", symbol: "£", key: "GBP"},
-    %{name: "Hong Kong Dollar", symbol: "HK$", key: "HKD"},
-    %{name: "Philippine Peso", symbol: "₱", key: "PHP"},
-    %{name: "Thai Baht", symbol: "฿", key: "THB"},
-    %{name: "US Dollar", symbol: "$", key: "USD"}
+    %{name: "Argentinian Peso", symbol: "A$", key: "ARS", type: "Fiat"},
+    %{name: "Canadian Dollar", symbol: "C$", key: "CAD", type: "Fiat"},
+    %{name: "Euro", symbol: "€", key: "EUR", type: "Fiat"},
+    %{name: "Pound Sterling", symbol: "£", key: "GBP", type: "Fiat"},
+    %{name: "Hong Kong Dollar", symbol: "HK$", key: "HKD", type: "Fiat"},
+    %{name: "Philippine Peso", symbol: "₱", key: "PHP", type: "Fiat"},
+    %{name: "Thai Baht", symbol: "฿", key: "THB", type: "Fiat"},
+    %{name: "US Dollar", symbol: "$", key: "USD", type: "Fiat"},
+    %{name: "Bitcoin", symbol: "₿", key: "BTC", type: "Crypto"},
+    %{name: "Ethereum", symbol: "Ξ", key: "ETH", type: "Crypto"},
+    %{name: "Litecoin", symbol: "Ł", key: "LTC", type: "Crypto"},
   ]
 
   @currency_map Enum.reduce(@currencies, %{}, fn currency, acc ->
@@ -28,19 +31,25 @@ defmodule Monetized.Currency do
   ## Examples
 
       iex> Monetized.Currency.parse("EUR 200.00")
-      %{name: "Euro", symbol: "€", key: "EUR"}
+      %{name: "Euro", symbol: "€", key: "EUR", type: "Fiat"}
 
       iex> Monetized.Currency.parse("£ 200.00")
-      %{name: "Pound Sterling", symbol: "£", key: "GBP"}
+      %{name: "Pound Sterling", symbol: "£", key: "GBP", type: "Fiat"}
 
       iex> Monetized.Currency.parse("200.00 USD")
-      %{name: "US Dollar", symbol: "$", key: "USD"}
+      %{name: "US Dollar", symbol: "$", key: "USD", type: "Fiat"}
 
       iex> Monetized.Currency.parse("200.00 THB")
-      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+      %{name: "Thai Baht", symbol: "฿", key: "THB", type: "Fiat"}
 
       iex> Monetized.Currency.parse("200.00 PHP")
-      %{key: "PHP", name: "Philippine Peso", symbol: "₱"}
+      %{key: "PHP", name: "Philippine Peso", symbol: "₱", type: "Fiat"}
+
+      iex> Monetized.Currency.parse("₿ 200.00")
+      %{key: "BTC", name: "Bitcoin", symbol: "₿", type: "Crypto"}
+
+      iex> Monetized.Currency.parse("200.00 BTC")
+      %{key: "BTC", name: "Bitcoin", symbol: "₿", type: "Crypto"}
 
   """
 
@@ -56,22 +65,25 @@ defmodule Monetized.Currency do
   ## Examples
 
       iex> Monetized.Currency.parse_by_key("EUR 200.00")
-      %{name: "Euro", symbol: "€", key: "EUR"}
+      %{name: "Euro", symbol: "€", key: "EUR", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_key("200.00 USD")
-      %{name: "US Dollar", symbol: "$", key: "USD"}
+      %{name: "US Dollar", symbol: "$", key: "USD", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_key("200.00 GBP")
-      %{name: "Pound Sterling", symbol: "£", key: "GBP"}
+      %{name: "Pound Sterling", symbol: "£", key: "GBP", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_key("200.00 THB")
-      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+      %{name: "Thai Baht", symbol: "฿", key: "THB", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_key("200.00 PHP")
-      %{key: "PHP", name: "Philippine Peso", symbol: "₱"}
+      %{key: "PHP", name: "Philippine Peso", symbol: "₱", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_key("200.00 ARS")
-      %{key: "ARS", name: "Argentinian Peso", symbol: "A$"}
+      %{key: "ARS", name: "Argentinian Peso", symbol: "A$", type: "Fiat"}
+
+      iex> Monetized.Currency.parse_by_key("200.00 BTC")
+      %{key: "BTC", name: "Bitcoin", symbol: "₿", type: "Crypto"}
 
   """
 
@@ -95,19 +107,22 @@ defmodule Monetized.Currency do
   ## Examples
 
       iex> Monetized.Currency.parse_by_symbol("€ 200.00")
-      %{name: "Euro", symbol: "€", key: "EUR"}
+      %{name: "Euro", symbol: "€", key: "EUR", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_symbol("$200.00")
-      %{name: "US Dollar", symbol: "$", key: "USD"}
+      %{name: "US Dollar", symbol: "$", key: "USD", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_symbol("£200.00")
-      %{name: "Pound Sterling", symbol: "£", key: "GBP"}
+      %{name: "Pound Sterling", symbol: "£", key: "GBP", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_symbol("฿200.00")
-      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+      %{name: "Thai Baht", symbol: "฿", key: "THB", type: "Fiat"}
 
       iex> Monetized.Currency.parse_by_symbol("₱200.00")
-      %{key: "PHP", name: "Philippine Peso", symbol: "₱"}
+      %{key: "PHP", name: "Philippine Peso", symbol: "₱", type: "Fiat"}
+
+      iex> Monetized.Currency.parse_by_symbol("₿200.00")
+      %{key: "BTC", name: "Bitcoin", symbol: "₿", type: "Crypto"}
 
   """
 
@@ -127,13 +142,16 @@ defmodule Monetized.Currency do
   ## Examples
 
       iex> Monetized.Currency.get("EUR")
-      %{name: "Euro", symbol: "€", key: "EUR"}
+      %{name: "Euro", symbol: "€", key: "EUR", type: "Fiat"}
 
       iex> Monetized.Currency.get("THB")
-      %{name: "Thai Baht", symbol: "฿", key: "THB"}
+      %{name: "Thai Baht", symbol: "฿", key: "THB", type: "Fiat"}
 
       iex> Monetized.Currency.get("PHP")
-      %{key: "PHP", name: "Philippine Peso", symbol: "₱"}
+      %{key: "PHP", name: "Philippine Peso", symbol: "₱", type: "Fiat"}
+
+      iex> Monetized.Currency.get("BTC")
+      %{key: "BTC", name: "Bitcoin", symbol: "₿", type: "Crypto"}
 
   """
 
