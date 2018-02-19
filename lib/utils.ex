@@ -16,7 +16,7 @@ defmodule Monetized.Money.Utils do
   def option_or_config(config, options, key), do: options[key] || config[key]
 
   def delimit_integer(number, delimiter) do
-    Integer.to_char_list(number)
+    Integer.to_charlist(number)
     |> Enum.reverse()
     |> delimit_integer(delimiter, [])
   end
