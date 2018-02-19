@@ -1,5 +1,4 @@
 defmodule Monetized.Money.Utils do
-
   @moduledoc false
 
   # Positive values
@@ -17,15 +16,14 @@ defmodule Monetized.Money.Utils do
   def option_or_config(config, options, key), do: options[key] || config[key]
 
   def delimit_integer(number, delimiter) do
-    Integer.to_char_list(number)
-    |> Enum.reverse
+    Integer.to_charlist(number)
+    |> Enum.reverse()
     |> delimit_integer(delimiter, [])
   end
 
-  def delimit_integer([a,b,c,d|tail], delimiter, acc) do
-    delimit_integer([d|tail], delimiter, [delimiter,c,b,a|acc])
+  def delimit_integer([a, b, c, d | tail], delimiter, acc) do
+    delimit_integer([d | tail], delimiter, [delimiter, c, b, a | acc])
   end
 
   def delimit_integer(list, _, acc), do: Enum.reverse(list) ++ acc
-
 end

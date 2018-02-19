@@ -38,16 +38,18 @@ defmodule Monetized.Math do
 
   """
 
-  @spec add(Money.t | String.t | integer | float | Decimal, Money.t | String.t | integer | float | Decimal) :: Money.t
+  @spec add(
+          Money.t() | String.t() | integer | float | Decimal,
+          Money.t() | String.t() | integer | float | Decimal
+        ) :: Money.t()
 
   def add(a, b) do
     a = to_money(a)
     b = to_money(b)
     c = determine_currency(a.currency, b.currency)
 
-    Decimal.add(a.value, b.value) |> Money.make([currency: c])
+    Decimal.add(a.value, b.value) |> Money.make(currency: c)
   end
-
 
   @doc """
 
@@ -77,7 +79,10 @@ defmodule Monetized.Math do
 
   """
 
-  @spec sub(Money.t | String.t | integer | float | Decimal, Money.t | String.t | integer | float | Decimal) :: Money.t
+  @spec sub(
+          Money.t() | String.t() | integer | float | Decimal,
+          Money.t() | String.t() | integer | float | Decimal
+        ) :: Money.t()
 
   def sub(a, b) do
     a = to_money(a)
@@ -85,7 +90,7 @@ defmodule Monetized.Math do
     c = determine_currency(a.currency, b.currency)
 
     Decimal.sub(a.value, b.value)
-    |> Money.make([currency: c])
+    |> Money.make(currency: c)
   end
 
   defp to_money(%Monetized.Money{} = money), do: money
@@ -94,6 +99,7 @@ defmodule Monetized.Math do
   defp determine_currency(nil, b), do: b
   defp determine_currency(a, nil), do: a
   defp determine_currency(nil, nil), do: nil
+
   defp determine_currency(a, b) do
     if a != b, do: raise_currency_conflict()
     a || b
@@ -102,5 +108,4 @@ defmodule Monetized.Math do
   defp raise_currency_conflict do
     raise "Math requires both values to be of the same currency."
   end
-
 end
