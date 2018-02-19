@@ -86,5 +86,4 @@ defmodule Monetized.MoneyTest do
       Money.from_decimal(100.00)
     end
   end
-
 end

@@ -1,5 +1,4 @@
 defmodule Monetized.Currency do
-
   @currencies [
     %{name: "Argentinian Peso", symbol: "A$", key: "ARS"},
     %{name: "Canadian Dollar", symbol: "C$", key: "CAD"},
@@ -8,10 +7,12 @@ defmodule Monetized.Currency do
     %{name: "Hong Kong Dollar", symbol: "HK$", key: "HKD"},
     %{name: "Philippine Peso", symbol: "₱", key: "PHP"},
     %{name: "Thai Baht", symbol: "฿", key: "THB"},
-    %{name: "US Dollar", symbol: "$", key: "USD"},
+    %{name: "US Dollar", symbol: "$", key: "USD"}
   ]
 
-  @currency_map Enum.reduce(@currencies, %{}, fn(currency, acc) -> Map.put(acc, currency.key, currency) end)
+  @currency_map Enum.reduce(@currencies, %{}, fn currency, acc ->
+                  Map.put(acc, currency.key, currency)
+                end)
 
   @moduledoc """
 
@@ -76,9 +77,11 @@ defmodule Monetized.Currency do
 
   def parse_by_key(str) do
     piped = Enum.join(keys(), "|")
+
     case Regex.scan(~r/#{piped}/, str) do
       [[a]] ->
         get(a)
+
       _ ->
         nil
     end
@@ -110,9 +113,11 @@ defmodule Monetized.Currency do
 
   @currencies
   |> Enum.map(&Map.to_list/1)
-  |> Enum.each(fn (currency) ->
-    def parse_by_symbol(unquote(Keyword.get(currency, :symbol)) <> _rest), do: Enum.into(unquote(currency), %{})
+  |> Enum.each(fn currency ->
+    def parse_by_symbol(unquote(Keyword.get(currency, :symbol)) <> _rest),
+      do: Enum.into(unquote(currency), %{})
   end)
+
   def parse_by_symbol(_), do: nil
 
   @doc """
@@ -132,7 +137,7 @@ defmodule Monetized.Currency do
 
   """
 
-  @spec get(String.t) :: struct
+  @spec get(String.t()) :: struct
 
   def get(key), do: all()[key]
 
@@ -155,5 +160,4 @@ defmodule Monetized.Currency do
   @spec keys :: list
 
   def keys, do: Map.keys(all())
-
 end
