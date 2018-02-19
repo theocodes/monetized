@@ -10,7 +10,8 @@ defmodule Monetized.Currency do
     %{name: "US Dollar", symbol: "$", key: "USD", type: "Fiat"},
     %{name: "Bitcoin", symbol: "₿", key: "BTC", type: "Crypto"},
     %{name: "Ethereum", symbol: "Ξ", key: "ETH", type: "Crypto"},
-    %{name: "Litecoin", symbol: "Ł", key: "LTC", type: "Crypto"}
+    %{name: "Litecoin", symbol: "Ł", key: "LTC", type: "Crypto"},
+    %{name: "Ripple", key: "XRP", type: "Crypto"}
   ]
 
   @currency_map Enum.reduce(@currencies, %{}, fn currency, acc ->
@@ -127,6 +128,7 @@ defmodule Monetized.Currency do
   """
 
   @currencies
+  |> Enum.filter(&Map.has_key?(&1, :symbol))
   |> Enum.map(&Map.to_list/1)
   |> Enum.each(fn currency ->
     def parse_by_symbol(unquote(Keyword.get(currency, :symbol)) <> _rest),
