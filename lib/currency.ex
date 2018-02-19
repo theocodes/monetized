@@ -10,7 +10,7 @@ defmodule Monetized.Currency do
     %{name: "US Dollar", symbol: "$", key: "USD", type: "Fiat"},
     %{name: "Bitcoin", symbol: "₿", key: "BTC", type: "Crypto"},
     %{name: "Ethereum", symbol: "Ξ", key: "ETH", type: "Crypto"},
-    %{name: "Litecoin", symbol: "Ł", key: "LTC", type: "Crypto"},
+    %{name: "Litecoin", symbol: "Ł", key: "LTC", type: "Crypto"}
   ]
 
   @currency_map Enum.reduce(@currencies, %{}, fn currency, acc ->
