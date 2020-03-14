@@ -235,7 +235,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec make(integer | float | String.t | Decimal, list) :: t
+  @spec make(integer | float | String.t | Decimal.t, list) :: t
 
   def make(amount, options \\ []) do
     do_make(amount, options)
@@ -401,7 +401,7 @@ defmodule Monetized.Money do
 
   """
 
-  @spec from_decimal(Decimal, list) :: t
+  @spec from_decimal(Decimal.t, list) :: t
 
   def from_decimal(value = %Decimal{}, options \\ []) do
     currency_key = option_or_config(config(), options, :currency)

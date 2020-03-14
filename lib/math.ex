@@ -38,7 +38,7 @@ defmodule Monetized.Math do
 
   """
 
-  @spec add(Money.t | String.t | integer | float | Decimal, Money.t | String.t | integer | float | Decimal) :: Money.t
+  @spec add(Money.t | String.t | integer | float | Decimal.t, Money.t | String.t | integer | float | Decimal.t) :: Money.t
 
   def add(a, b) do
     a = to_money(a)
@@ -77,7 +77,7 @@ defmodule Monetized.Math do
 
   """
 
-  @spec sub(Money.t | String.t | integer | float | Decimal, Money.t | String.t | integer | float | Decimal) :: Money.t
+  @spec sub(Money.t | String.t | integer | float | Decimal.t, Money.t | String.t | integer | float | Decimal.t) :: Money.t
 
   def sub(a, b) do
     a = to_money(a)
